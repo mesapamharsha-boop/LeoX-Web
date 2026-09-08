@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" width="560" height="200" fill="none">
+  <!-- Skew group for italic LEOX letters (-12 deg) -->
+  <g transform="skewX(-12) translate(65, 45)">
+    <!-- L -->
+    <path fill="#FFFFFF" d="M 0 100 L 0 6 C 0 2.7 2.7 0 6 0 L 22 0 C 25.3 0 28 2.7 28 6 L 28 76 L 68 76 C 72.4 76 76 79.6 76 84 L 76 92 C 76 96.4 72.4 100 68 100 Z"/>
+
+    <!-- E -->
+    <path fill="#FFFFFF" d="M 88 100 L 88 6 C 88 2.7 90.7 0 94 0 L 156 0 C 160.4 0 164 3.6 164 8 L 164 16 C 164 20.4 160.4 24 156 24 L 116 24 L 116 38 L 148 38 C 152.4 38 156 41.6 156 46 L 156 54 C 156 58.4 152.4 62 148 62 L 116 62 L 116 76 L 158 76 C 162.4 76 166 79.6 166 84 L 166 92 C 166 96.4 162.4 100 158 100 Z"/>
+
+    <!-- O -->
+    <path fill="#FFFFFF" fill-rule="evenodd" d="M 220 0 C 194 0 180 18 180 44 L 180 56 C 180 82 194 100 220 100 L 240 100 C 266 100 280 82 280 56 L 280 44 C 280 18 266 0 240 0 Z M 220 24 L 240 24 C 248 24 252 32 252 44 L 252 56 C 252 68 248 76 240 76 L 220 76 C 212 76 208 68 208 56 L 208 44 C 208 32 212 24 220 24 Z"/>
+
+    <!-- X: Regular diagonal (top-left to bottom-right) -->
+    <path fill="#FF000F" d="M 298 4 C 295 1 297 -3 302 -3 C 305 -3 308 -1 311 3 L 381 97 C 384 101 382 105 378 105 C 374 105 371 103 368 99 Z"/>
+
+    <!-- X: Iconic extended razor blade (bottom-left to top-right) -->
+    <!-- Starts low-left below baseline, widens in the center, shoots far up-right to a sharp point -->
+    <path fill="#FF000F" d="M 276 138 Q 338 52 458 -32 Q 352 44 276 138 Z"/>
+  </g>
+</svg>

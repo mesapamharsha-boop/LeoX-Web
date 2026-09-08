@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" fill="none">
+  <rect width="120" height="120" rx="24" fill="#0E0E12"/>
+  <g transform="skewX(-12) translate(14, 18) scale(0.65)">
+    <!-- X: Normal diagonal -->
+    <path fill="#FF000F" d="M 28 6 C 24 1 27 -5 35 -5 C 40 -5 45 -2 50 4 L 120 95 C 124 100 121 106 114 106 C 108 106 103 103 98 97 Z"/>
+    <!-- X: Extended blade -->
+    <path fill="#FF000F" d="M 2 138 Q 64 52 184 -32 Q 78 44 2 138 Z"/>
+  </g>
+</svg>

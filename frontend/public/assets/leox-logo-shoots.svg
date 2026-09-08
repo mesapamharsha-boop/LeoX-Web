@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 260" width="680" height="260" fill="none">
+  
+  
+  <!-- LEOX Main Mark -->
+  <!-- Skew -12.5 deg matching the exact dynamic italic slant in the screenshot -->
+  <g transform="skewX(-12.5) translate(80, 52)">
+    <!-- Letter L -->
+    <!-- Solid white, bold rounded corners, horizontal foot with rounded end -->
+    <path fill="#FFFFFF" d="
+      M 0 110 
+      L 0 8 
+      C 0 3.6 3.6 0 8 0 
+      L 24 0 
+      C 28.4 0 32 3.6 32 8 
+      L 32 84 
+      L 74 84 
+      C 79 84 83 88 83 93 
+      L 83 101 
+      C 83 106 79 110 74 110 
+      Z
+    "/>
+
+    <!-- Letter E -->
+    <!-- Solid white, bold spine, 3 horizontal bars with rounded tips, mid-bar slightly shorter -->
+    <path fill="#FFFFFF" d="
+      M 98 110 
+      L 98 8 
+      C 98 3.6 101.6 0 106 0 
+      L 174 0 
+      C 178.5 0 182 3.5 182 8 
+      L 182 17 
+      C 182 21.5 178.5 25 174 25 
+      L 130 25 
+      L 130 42 
+      L 165 42 
+      C 169.5 42 173 45.5 173 50 
+      L 173 58 
+      C 173 62.5 169.5 66 165 66 
+      L 130 66 
+      L 130 84 
+      L 176 84 
+      C 180.5 84 184 87.5 184 92 
+      L 184 102 
+      C 184 106.5 180.5 110 176 110 
+      Z
+    "/>
+
+    <!-- Letter O -->
+    <!-- Solid white, bold pill capsule with matching inner rounded counter -->
+    <path fill="#FFFFFF" fill-rule="evenodd" d="
+      M 242 0 
+      C 214 0 198 20 198 48 
+      L 198 62 
+      C 198 90 214 110 242 110 
+      L 264 110 
+      C 292 110 308 90 308 62 
+      L 308 48 
+      C 308 20 292 0 264 0 
+      Z 
+      M 242 26 
+      L 264 26 
+      C 273 26 278 34 278 48 
+      L 278 62 
+      C 278 76 273 84 264 84 
+      L 242 84 
+      C 233 84 228 76 228 62 
+      L 228 48 
+      C 228 34 233 26 242 26 
+      Z
+    "/>
+
+    <!-- Letter X: Standard Top-Left to Bottom-Right Stroke -->
+    <path fill="#FF0515" d="
+      M 328 6 
+      C 324 1 327 -4 334 -4 
+      C 338 -4 342 -1 345 3 
+      L 423 107 
+      C 427 112 424 117 418 117 
+      C 413 117 409 114 406 110 
+      Z
+    "/>
+
+    <!-- Letter X: Iconic Extended Razor Blade (Bottom-Left to Top-Right) -->
+    <!-- Needle sharp bottom-left below baseline, broadens at intersection, needle sharp top-right far above cap-height -->
+    <path fill="#FF0515" d="
+      M 298 152 
+      C 342 108 392 38 506 -42 
+      C 426 30 366 102 298 152 
+      Z
+    "/>
+  </g>
+
+  
+  <!-- "shoots" in small lowercase letters directly below the logo -->
+  <text 
+    x="315" 
+    y="218" 
+    text-anchor="middle" 
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Space Grotesk', sans-serif" 
+    font-size="22" 
+    font-weight="600" 
+    fill="#9CA3AF" 
+    letter-spacing="9"
+    style="text-transform: lowercase;"
+  >
+    shoots
+  </text>
+</svg>
