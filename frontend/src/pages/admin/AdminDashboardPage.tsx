@@ -185,6 +185,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
         setActiveBookingModal(res.booking);
       }
       success('Booking Updated', `Status changed to ${status}`);
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to update booking', err.message);
     }
@@ -198,6 +199,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
         setActiveBookingModal(res.booking);
       }
       success('Internal Notes Saved');
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to save notes', err.message);
     }
@@ -210,8 +212,39 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       setBookings((prev) => prev.filter((b) => b.id !== id));
       setActiveBookingModal(null);
       success('Booking Removed');
+      notifyDataChanged();
     } catch (err: any) {
       error('Delete failed', err.message);
+    }
+  };
+
+  const handleSaveBooking = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingBooking?.fullName || !editingBooking?.phone || !editingBooking?.service) {
+      error('Full name, phone, and service are required');
+      return;
+    }
+    try {
+      if (editingBooking.id) {
+        const res = await api.updateBooking(editingBooking.id, editingBooking);
+        setBookings((prev) => prev.map((b) => (b.id === editingBooking.id ? res.booking : b)));
+        success('Booking Updated Successfully');
+      } else {
+        const res = await api.createBooking({
+          ...editingBooking,
+          status: editingBooking.status || 'NEW',
+          eventDate: editingBooking.eventDate || new Date().toISOString().split('T')[0],
+          city: editingBooking.city || 'Vijayawada',
+          venue: editingBooking.venue || 'Private Venue',
+        });
+        setBookings((prev) => [res.booking, ...prev]);
+        success('Booking Created Successfully');
+      }
+      setBookingModalOpen(false);
+      setEditingBooking(null);
+      notifyDataChanged();
+    } catch (err: any) {
+      error('Failed to save booking', err.message);
     }
   };
 
@@ -224,6 +257,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
         setActiveInquiryModal(res.inquiry);
       }
       success('Inquiry Updated', `Status marked as ${status}`);
+      notifyDataChanged();
     } catch (err: any) {
       error('Update failed', err.message);
     }
@@ -236,8 +270,37 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       setInquiries((prev) => prev.filter((i) => i.id !== id));
       setActiveInquiryModal(null);
       success('Inquiry Deleted');
+      notifyDataChanged();
     } catch (err: any) {
       error('Delete failed', err.message);
+    }
+  };
+
+  const handleSaveInquiry = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingInquiry?.name || !editingInquiry?.email || !editingInquiry?.message) {
+      error('Name, email, and message are required');
+      return;
+    }
+    try {
+      if (editingInquiry.id) {
+        const res = await api.updateInquiry(editingInquiry.id, editingInquiry);
+        setInquiries((prev) => prev.map((i) => (i.id === editingInquiry.id ? res.inquiry : i)));
+        success('Inquiry Updated Successfully');
+      } else {
+        const res = await api.createInquiry({
+          ...editingInquiry,
+          status: editingInquiry.status || 'NEW',
+          service: editingInquiry.service || 'Photography & Videography',
+        });
+        setInquiries((prev) => [res.inquiry, ...prev]);
+        success('Inquiry Logged Successfully');
+      }
+      setInquiryModalOpen(false);
+      setEditingInquiry(null);
+      notifyDataChanged();
+    } catch (err: any) {
+      error('Failed to save inquiry', err.message);
     }
   };
 
@@ -260,6 +323,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       }
       setPortfolioModalOpen(false);
       setEditingProject(null);
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to save project', err.message);
     }
@@ -271,6 +335,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       await api.deletePortfolio(id);
       setPortfolio((prev) => prev.filter((p) => p.id !== id));
       success('Project Deleted');
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to delete project', err.message);
     }
@@ -295,6 +360,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       }
       setReelModalOpen(false);
       setEditingReel(null);
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to save reel', err.message);
     }
@@ -306,6 +372,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       await api.deleteReel(id);
       setReels((prev) => prev.filter((r) => r.id !== id));
       success('Reel Deleted');
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to delete reel', err.message);
     }
@@ -330,6 +397,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       }
       setServiceModalOpen(false);
       setEditingService(null);
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to save service', err.message);
     }
@@ -341,6 +409,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       await api.deleteService(id);
       setServices((prev) => prev.filter((s) => s.id !== id));
       success('Service Deleted');
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to delete service', err.message);
     }
@@ -365,6 +434,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       }
       setPackageModalOpen(false);
       setEditingPackage(null);
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to save package', err.message);
     }
@@ -376,6 +446,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       await api.deletePackage(id);
       setPackages((prev) => prev.filter((p) => p.id !== id));
       success('Package Deleted');
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to delete package', err.message);
     }
@@ -400,6 +471,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       }
       setTestimonialModalOpen(false);
       setEditingTestimonial(null);
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to save review', err.message);
     }
@@ -411,6 +483,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       await api.deleteTestimonial(id);
       setTestimonials((prev) => prev.filter((t) => t.id !== id));
       success('Review Deleted');
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to delete review', err.message);
     }
@@ -424,6 +497,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       const res = await api.updateSettings(siteSettings);
       setSiteSettings(res.settings);
       success('Settings Updated Successfully');
+      notifyDataChanged();
     } catch (err: any) {
       error('Failed to update settings', err.message);
     }
@@ -480,6 +554,20 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       b.city.toLowerCase().includes(query) ||
       b.service.toLowerCase().includes(query) ||
       b.venue.toLowerCase().includes(query);
+    return matchStatus && matchSearch;
+  });
+
+  // Filtered inquiries
+  const filteredInquiries = inquiries.filter((inq) => {
+    const matchStatus = inquiryFilterStatus === 'ALL' || inq.status === inquiryFilterStatus;
+    const query = inquirySearch.trim().toLowerCase();
+    const matchSearch =
+      !query ||
+      inq.name.toLowerCase().includes(query) ||
+      inq.email.toLowerCase().includes(query) ||
+      inq.phone.toLowerCase().includes(query) ||
+      inq.message.toLowerCase().includes(query) ||
+      (inq.service && inq.service.toLowerCase().includes(query));
     return matchStatus && matchSearch;
   });
 
@@ -769,20 +857,45 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                   />
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-400">Filter Status:</span>
-                  <select
-                    value={bookingFilterStatus}
-                    onChange={(e) => setBookingFilterStatus(e.target.value)}
-                    className="bg-[#171824] border border-[#282a3c] text-xs text-white rounded-xl px-3 py-2 focus:outline-none focus:border-[#E50914]"
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-400">Filter Status:</span>
+                    <select
+                      value={bookingFilterStatus}
+                      onChange={(e) => setBookingFilterStatus(e.target.value)}
+                      className="bg-[#171824] border border-[#282a3c] text-xs text-white rounded-xl px-3 py-2 focus:outline-none focus:border-[#E50914]"
+                    >
+                      <option value="ALL">All Statuses ({bookings.length})</option>
+                      <option value="NEW">NEW</option>
+                      <option value="CONTACTED">CONTACTED</option>
+                      <option value="CONFIRMED">CONFIRMED</option>
+                      <option value="COMPLETED">COMPLETED</option>
+                      <option value="CANCELLED">CANCELLED</option>
+                    </select>
+                  </div>
+
+                  <button
+                    id="admin-add-booking-btn"
+                    onClick={() => {
+                      setEditingBooking({
+                        fullName: '',
+                        phone: '',
+                        email: '',
+                        service: services[0]?.serviceName || 'Wedding Photography',
+                        package: packages[0]?.packageName || '',
+                        eventDate: new Date().toISOString().split('T')[0],
+                        city: 'Vijayawada',
+                        venue: '',
+                        eventDetails: '',
+                        status: 'NEW',
+                      });
+                      setBookingModalOpen(true);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-[#E50914] hover:bg-[#FF2E36] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-[#E50914]/20 transition-all whitespace-nowrap"
                   >
-                    <option value="ALL">All Statuses ({bookings.length})</option>
-                    <option value="NEW">NEW</option>
-                    <option value="CONTACTED">CONTACTED</option>
-                    <option value="CONFIRMED">CONFIRMED</option>
-                    <option value="COMPLETED">COMPLETED</option>
-                    <option value="CANCELLED">CANCELLED</option>
-                  </select>
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add Booking</span>
+                  </button>
                 </div>
               </div>
 
@@ -830,12 +943,22 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                               <option value="CANCELLED">CANCELLED</option>
                             </select>
                           </td>
-                          <td className="px-6 py-4 text-right space-x-2">
+                          <td className="px-6 py-4 text-right space-x-1.5 whitespace-nowrap">
                             <button
                               onClick={() => setActiveBookingModal(b)}
-                              className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-[#E50914] text-white font-semibold transition-colors"
+                              className="px-2.5 py-1.5 rounded-lg bg-white/[0.06] hover:bg-[#E50914] text-white font-semibold transition-colors"
                             >
                               Details
+                            </button>
+                            <button
+                              onClick={() => {
+                                setEditingBooking(b);
+                                setBookingModalOpen(true);
+                              }}
+                              className="p-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.15] text-gray-300 hover:text-white transition-colors"
+                              title="Edit booking"
+                            >
+                              <Edit3 className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => handleDeleteBooking(b.id)}
@@ -864,8 +987,56 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
           {/* ===================== INQUIRIES TAB ===================== */}
           {activeTab === 'inquiries' && (
             <div className="space-y-6">
+              {/* Controls bar */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 rounded-2xl bg-[#111218] border border-[#20222e]">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={inquirySearch}
+                    onChange={(e) => setInquirySearch(e.target.value)}
+                    placeholder="Search inquiries by name, email, phone, or message..."
+                    className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#171824] border border-[#282a3c] text-xs text-white focus:outline-none focus:border-[#E50914]"
+                  />
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <select
+                    value={inquiryFilterStatus}
+                    onChange={(e) => setInquiryFilterStatus(e.target.value)}
+                    className="bg-[#171824] border border-[#282a3c] text-xs text-white rounded-xl px-3 py-2 focus:outline-none focus:border-[#E50914]"
+                  >
+                    <option value="ALL">All Statuses ({inquiries.length})</option>
+                    <option value="NEW">NEW</option>
+                    <option value="READ">READ</option>
+                    <option value="REPLIED">REPLIED</option>
+                    <option value="CONVERTED">CONVERTED</option>
+                    <option value="CLOSED">CLOSED</option>
+                  </select>
+
+                  <button
+                    id="admin-add-inquiry-btn"
+                    onClick={() => {
+                      setEditingInquiry({
+                        name: '',
+                        email: '',
+                        phone: '',
+                        service: services[0]?.serviceName || 'Photography & Videography',
+                        message: '',
+                        status: 'NEW',
+                      });
+                      setInquiryModalOpen(true);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-[#E50914] hover:bg-[#FF2E36] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-[#E50914]/20 transition-all whitespace-nowrap"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Log Inquiry</span>
+                  </button>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {inquiries.map((inq) => (
+                {filteredInquiries.map((inq) => (
                   <div
                     key={inq.id}
                     className="p-6 rounded-2xl bg-[#111218] border border-[#20222e] hover:border-[#E50914]/50 transition-all flex flex-col justify-between shadow-xl"
@@ -892,6 +1063,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                       <div className="text-xs text-gray-400 mt-0.5">
                         {inq.email} &bull; {inq.phone}
                       </div>
+                      {inq.service && (
+                        <div className="text-[11px] text-[#FF4D55] font-semibold mt-1">
+                          Service: {inq.service}
+                        </div>
+                      )}
 
                       <div className="mt-4 p-3 rounded-xl bg-[#171822] text-xs text-gray-300 leading-relaxed italic line-clamp-4">
                         "{inq.message}"
@@ -911,7 +1087,17 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                         <option value="CLOSED">CLOSED</option>
                       </select>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => {
+                            setEditingInquiry(inq);
+                            setInquiryModalOpen(true);
+                          }}
+                          className="p-1 text-gray-400 hover:text-white transition-colors"
+                          title="Edit inquiry"
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </button>
                         <a
                           href={`mailto:${inq.email}?subject=Regarding%20your%20LEOX%20Shoot%20Inquiry`}
                           className="px-2.5 py-1 rounded-lg bg-[#E50914]/20 hover:bg-[#E50914] text-[#FF4D55] hover:text-white text-xs font-semibold transition-colors"
@@ -921,6 +1107,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                         <button
                           onClick={() => handleDeleteInquiry(inq.id)}
                           className="p-1 text-gray-500 hover:text-red-400 transition-colors"
+                          title="Delete inquiry"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -928,7 +1115,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                     </div>
                   </div>
                 ))}
-                {inquiries.length === 0 && (
+                {filteredInquiries.length === 0 && (
                   <div className="col-span-full py-12 text-center text-gray-500">
                     No inquiries recorded in database.
                   </div>
