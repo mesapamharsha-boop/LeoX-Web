@@ -1,85 +1,127 @@
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import fs from 'fs';
 import path from 'path';
-import { ROOT_DIR } from '../database/db';
+import { ENV } from '../config/env';
 
 export interface UploadResult {
   url: string;
-  publicId?: string;
+  secure_url: string;
+  publicId: string;
+  public_id: string;
+  resourceType: 'image' | 'video' | 'raw' | 'auto';
   format?: string;
   size?: number;
   width?: number;
   height?: number;
+  duration?: number;
 }
 
 export class MediaService {
-  private uploadsDir = path.join(ROOT_DIR, 'public', 'uploads');
-  private frontendUploadsDir = path.join(ROOT_DIR, 'frontend', 'public', 'uploads');
+  private isConfigured: boolean = false;
 
   constructor() {
-    if (!fs.existsSync(this.uploadsDir)) {
-      fs.mkdirSync(this.uploadsDir, { recursive: true });
-    }
-    if (!fs.existsSync(this.frontendUploadsDir)) {
-      fs.mkdirSync(this.frontendUploadsDir, { recursive: true });
+    this.initCloudinary();
+  }
+
+  private initCloudinary(): void {
+    const cloudName = (ENV.CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME || '').trim();
+    const apiKey = (ENV.CLOUDINARY_API_KEY || process.env.CLOUDINARY_API_KEY || '').trim();
+    const apiSecret = (ENV.CLOUDINARY_API_SECRET || process.env.CLOUDINARY_API_SECRET || '').trim();
+
+    if (cloudName && apiKey && apiSecret) {
+      cloudinary.config({
+        cloud_name: cloudName,
+        api_key: apiKey,
+        api_secret: apiSecret,
+        secure: true,
+      });
+      this.isConfigured = true;
+    } else {
+      this.isConfigured = false;
     }
   }
 
   /**
-   * Save a local file buffer or move an uploaded multer file.
-   * If Cloudinary environment variables are set, upload directly to Cloudinary.
+   * Upload an image or video file directly to Cloudinary.
+   * File is received via multer temporary storage, uploaded to Cloudinary,
+   * and the temporary local file is always removed immediately.
    */
-  async uploadFile(file: Express.Multer.File): Promise<UploadResult> {
-    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-    const apiKey = process.env.CLOUDINARY_API_KEY;
-    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+  async uploadFile(
+    file: Express.Multer.File,
+    options?: { folder?: string; resourceType?: 'image' | 'video' | 'auto' }
+  ): Promise<UploadResult> {
+    const mime = (file.mimetype || '').toLowerCase();
+    const ext = path.extname(file.originalname || '').toLowerCase().replace('.', '');
+    const isVideo = mime.startsWith('video/') || ['mp4', 'mov', 'webm', 'mkv', 'avi'].includes(ext);
+    const determinedResourceType: 'image' | 'video' | 'auto' =
+      options?.resourceType || (isVideo ? 'video' : 'image');
 
-    if (cloudName && apiKey && apiSecret) {
-      try {
-        console.log('[MediaService] Cloudinary configuration detected.');
-      } catch (err) {
-        console.warn('[MediaService] Cloudinary upload failed, using local storage:', err);
+    this.initCloudinary();
+
+    if (!this.isConfigured) {
+      if (file.path && fs.existsSync(file.path)) {
+        try {
+          fs.unlinkSync(file.path);
+        } catch {}
       }
+      throw new Error(
+        'Cloudinary credentials are missing. Please ensure CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET are set.'
+      );
     }
 
-    // Mirror to frontend uploads dir if separate
     try {
-      const srcPath = path.join(this.uploadsDir, file.filename);
-      const destPath = path.join(this.frontendUploadsDir, file.filename);
-      if (fs.existsSync(srcPath) && !fs.existsSync(destPath)) {
-        fs.copyFileSync(srcPath, destPath);
-      }
-    } catch (e) {
-      // Non-fatal mirror
-    }
+      const uploadOptions: any = {
+        folder: options?.folder || 'leox',
+        resource_type: determinedResourceType,
+        use_filename: true,
+        unique_filename: true,
+        overwrite: false,
+      };
 
-    // Local file delivery: file.filename is saved in public/uploads
-    const relativeUrl = `/uploads/${file.filename}`;
-    return {
-      url: relativeUrl,
-      publicId: file.filename,
-      size: file.size,
-      format: path.extname(file.originalname).replace('.', ''),
-    };
+      // Direct upload from temporary file path
+      const uploadResponse: UploadApiResponse = await cloudinary.uploader.upload(
+        file.path,
+        uploadOptions
+      );
+
+      return {
+        url: uploadResponse.secure_url,
+        secure_url: uploadResponse.secure_url,
+        publicId: uploadResponse.public_id,
+        public_id: uploadResponse.public_id,
+        resourceType: (uploadResponse.resource_type as any) || determinedResourceType,
+        format: uploadResponse.format,
+        size: uploadResponse.bytes,
+        width: uploadResponse.width,
+        height: uploadResponse.height,
+        duration: uploadResponse.duration,
+      };
+    } catch (error: any) {
+      console.error('[MediaService] Cloudinary upload error:', error?.message || error);
+      throw new Error(`Cloudinary upload failed: ${error?.message || 'Check Cloudinary credentials and network'}`);
+    } finally {
+      // Do not store uploaded media files permanently on application server
+      if (file.path && fs.existsSync(file.path)) {
+        try {
+          fs.unlinkSync(file.path);
+        } catch (e) {
+          console.warn('[MediaService] Could not remove temp file:', file.path);
+        }
+      }
+    }
   }
 
-  async deleteFile(filename: string): Promise<boolean> {
+  /**
+   * Delete asset from Cloudinary by public ID
+   */
+  async deleteFile(publicId: string, resourceType: 'image' | 'video' = 'image'): Promise<boolean> {
     try {
-      const cleanName = path.basename(filename);
-      const filePath = path.join(this.uploadsDir, cleanName);
-      const frontendFilePath = path.join(this.frontendUploadsDir, cleanName);
-
-      let deleted = false;
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-        deleted = true;
-      }
-      if (fs.existsSync(frontendFilePath)) {
-        fs.unlinkSync(frontendFilePath);
-        deleted = true;
-      }
-      return deleted;
-    } catch (err) {
-      console.error('[MediaService] Error deleting file:', err);
+      this.initCloudinary();
+      if (!this.isConfigured) return false;
+      const res = await cloudinary.uploader.destroy(publicId, { resource_type: resourceType });
+      return res.result === 'ok' || res.result === 'not found';
+    } catch (err: any) {
+      console.error('[MediaService] Error destroying Cloudinary asset:', err?.message || err);
       return false;
     }
   }

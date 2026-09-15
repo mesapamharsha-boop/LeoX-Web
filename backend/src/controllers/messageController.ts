@@ -4,7 +4,7 @@ import { emailService } from '../services/emailService';
 
 export const createMessage = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, phone, subject, message } = req.body;
+    const { name, email, phone, service, subject, message } = req.body;
 
     if (!name || !email || !message) {
       res.status(400).json({ success: false, message: 'Name, email, and message are required.' });
@@ -15,22 +15,24 @@ export const createMessage = async (req: Request, res: Response): Promise<void> 
       name: name.trim(),
       email: email.trim().toLowerCase(),
       phone: phone ? phone.trim() : '',
+      service: service ? service.trim() : 'General Enquiry',
       subject: subject ? subject.trim() : 'General Inquiry',
       message: message.trim(),
       isRead: false,
     });
 
     emailService.sendContactNotification({
-      name,
-      email,
-      phone: phone || '',
-      subject: subject || 'New Contact Submission',
-      message,
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone ? phone.trim() : '',
+      service: service ? service.trim() : 'General Enquiry',
+      subject: subject ? subject.trim() : 'New Contact Submission',
+      message: message.trim(),
     }).catch(err => console.error('[Email] Failed to notify admin of message:', err));
 
     res.status(201).json({
       success: true,
-      message: 'Thank you. Your message has been received.',
+      message: "Thank you! Your enquiry has been received. We'll get back to you shortly.",
       data: newMessage,
     });
   } catch (error) {

@@ -15,6 +15,7 @@ import {
 } from '../../types';
 import { Logo } from '../../components/common/Logo';
 import { Modal } from '../../components/common/Modal';
+import { CloudinaryMediaUploader } from '../../components/admin/CloudinaryMediaUploader';
 import {
   LayoutDashboard,
   CalendarCheck,
@@ -45,6 +46,7 @@ import {
 
 interface AdminDashboardPageProps {
   navigate: (path: string) => void;
+  onDataUpdated?: () => void;
 }
 
 type TabType =
@@ -59,7 +61,7 @@ type TabType =
   | 'settings'
   | 'security';
 
-export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate }) => {
+export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate, onDataUpdated }) => {
   const { admin, logout, isAuthenticated, isLoading: authLoading } = useAuth();
   const { success, error, info } = useToast();
 
@@ -80,10 +82,18 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
   // Filter & Search states
   const [bookingFilterStatus, setBookingFilterStatus] = useState<string>('ALL');
   const [bookingSearch, setBookingSearch] = useState<string>('');
+  const [inquiryFilterStatus, setInquiryFilterStatus] = useState<string>('ALL');
+  const [inquirySearch, setInquirySearch] = useState<string>('');
 
   // Modals
   const [activeBookingModal, setActiveBookingModal] = useState<Booking | null>(null);
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [editingBooking, setEditingBooking] = useState<Partial<Booking> | null>(null);
+
   const [activeInquiryModal, setActiveInquiryModal] = useState<Inquiry | null>(null);
+  const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
+  const [editingInquiry, setEditingInquiry] = useState<Partial<Inquiry> | null>(null);
+
   const [portfolioModalOpen, setPortfolioModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Partial<PortfolioProject> | null>(null);
   const [reelModalOpen, setReelModalOpen] = useState(false);
@@ -94,6 +104,18 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
   const [editingPackage, setEditingPackage] = useState<Partial<Package> | null>(null);
   const [testimonialModalOpen, setTestimonialModalOpen] = useState(false);
   const [editingTestimonial, setEditingTestimonial] = useState<Partial<Testimonial> | null>(null);
+
+  // Cross-component notification helper to keep Landing Page immediately updated
+  const notifyDataChanged = () => {
+    try {
+      window.dispatchEvent(new CustomEvent('leox:data-updated'));
+      if (onDataUpdated) {
+        onDataUpdated();
+      }
+    } catch (err) {
+      console.warn('notifyDataChanged error:', err);
+    }
+  };
 
   // Security password state
   const [passData, setPassData] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
@@ -512,11 +534,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
         <div className="p-4 border-t border-[#1a1c26] space-y-3 bg-[#0a0b10]">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-[#E50914]/20 text-[#FF3842] flex items-center justify-center font-bold text-xs border border-[#E50914]/40">
-              MSH
+              LX
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-white truncate">{admin?.name || 'Mesapam Sri Harsha'}</div>
-              <div className="text-[10px] text-gray-400 truncate">{admin?.email || 'harsha@leox'}</div>
+              <div className="text-xs font-bold text-white truncate">{admin?.name || 'LeoX Director'}</div>
+              <div className="text-[10px] text-gray-400 truncate">{admin?.email || 'admin@leox'}</div>
             </div>
           </div>
 
@@ -579,7 +601,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                   city: 'Vijayawada',
                   venue: '',
                   eventDate: new Date().toISOString().split('T')[0],
-                  coverImage: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop',
+                  coverImage: '',
                   galleryImages: [],
                   description: '',
                   featured: true,
@@ -619,7 +641,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                 <div className="p-6 rounded-2xl bg-[#111218] border border-[#20222e] shadow-xl">
                   <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
                     <span className="font-semibold uppercase tracking-wider">New Inquiries</span>
-                    <Inbox className="w-4 h-4 text-amber-400" />
+                    <Inbox className="w-4 h-4 text-[#E50914]" />
                   </div>
                   <div className="text-3xl font-heading font-extrabold text-white">
                     {inquiries.filter((i) => i.status === 'NEW').length}
@@ -930,7 +952,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                       city: 'Vijayawada',
                       venue: '',
                       eventDate: new Date().toISOString().split('T')[0],
-                      coverImage: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop',
+                      coverImage: '',
                       galleryImages: [],
                       description: '',
                       featured: true,
@@ -1010,7 +1032,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                       city: 'Vijayawada',
                       venue: '',
                       eventDate: new Date().toISOString().split('T')[0],
-                      thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop',
+                      thumbnail: '',
                       instagramUrl: 'https://www.instagram.com/leox_shoots/',
                       views: '125K Views',
                       featured: true,
@@ -1312,10 +1334,14 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                       </label>
                       <input
                         type="text"
+                        placeholder="8374404536"
                         value={siteSettings.whatsAppNumber}
                         onChange={(e) => setSiteSettings({ ...siteSettings, whatsAppNumber: e.target.value })}
                         className="w-full px-4 py-2.5 rounded-xl bg-[#171822] border border-[#27293a] text-white text-xs"
                       />
+                      <p className="text-[10px] text-gray-400 mt-1">
+                        Business number used for all instant WhatsApp chat buttons & links.
+                      </p>
                     </div>
                   </div>
 
@@ -1445,6 +1471,28 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                 <span className="text-gray-400 block font-bold">Instagram</span>
                 <span className="text-white">{activeBookingModal.instagramHandle || 'N/A'}</span>
               </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-[#161722] border border-[#27293a] flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                <span className="text-gray-400 font-bold">WhatsApp Alert:</span>
+                <span
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                    activeBookingModal.whatsappStatus === 'sent'
+                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                      : activeBookingModal.whatsappStatus === 'failed'
+                      ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                      : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                  }`}
+                >
+                  {activeBookingModal.whatsappStatus || 'pending'}
+                </span>
+              </div>
+              {activeBookingModal.whatsappMessageId && (
+                <span className="text-[10px] text-gray-400 font-mono">
+                  ID: {activeBookingModal.whatsappMessageId}
+                </span>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4 p-4 rounded-xl bg-[#161722]">
@@ -1579,23 +1627,34 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
                 />
               </div>
 
-              <div className="col-span-2">
-                <label className="block text-gray-300 font-bold mb-1">Cover Image URL *</label>
-                <input
-                  type="url"
+              <div className="col-span-2 space-y-4">
+                <CloudinaryMediaUploader
+                  label="Cover Image"
+                  value={editingProject.coverImage}
                   required
-                  value={editingProject.coverImage || ''}
-                  onChange={(e) => setEditingProject({ ...editingProject, coverImage: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white"
+                  aspectRatio="video"
+                  accept="image"
+                  onChange={(url) => setEditingProject({ ...editingProject, coverImage: url })}
+                  helpText="Directly upload cover image to Cloudinary from your computer."
+                />
+
+                <CloudinaryMediaUploader
+                  label="Project Highlight Video (Optional)"
+                  value={editingProject.videoUrl}
+                  aspectRatio="video"
+                  accept="video"
+                  onChange={(url) => setEditingProject({ ...editingProject, videoUrl: url })}
+                  helpText="Directly upload video (MP4, WebM) to Cloudinary from your computer."
                 />
               </div>
 
               <div className="col-span-2">
-                <label className="block text-gray-300 font-bold mb-1">Instagram Project URL</label>
+                <label className="block text-gray-300 font-bold mb-1">Instagram Project URL (Optional)</label>
                 <input
                   type="url"
                   value={editingProject.instagramUrl || ''}
                   onChange={(e) => setEditingProject({ ...editingProject, instagramUrl: e.target.value })}
+                  placeholder="https://www.instagram.com/p/..."
                   className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white"
                 />
               </div>
@@ -1674,24 +1733,34 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
               </div>
             </div>
 
-            <div>
-              <label className="block text-gray-300 font-bold mb-1">Vertical Thumbnail URL (9:16) *</label>
-              <input
-                type="url"
+            <div className="space-y-4">
+              <CloudinaryMediaUploader
+                label="Vertical Thumbnail (9:16)"
+                value={editingReel.thumbnail}
                 required
-                value={editingReel.thumbnail || ''}
-                onChange={(e) => setEditingReel({ ...editingReel, thumbnail: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white"
+                aspectRatio="reel"
+                accept="image"
+                onChange={(url) => setEditingReel({ ...editingReel, thumbnail: url })}
+                helpText="Select 9:16 vertical poster or snapshot from your computer."
+              />
+
+              <CloudinaryMediaUploader
+                label="Reel Video File (Optional)"
+                value={editingReel.videoUrl}
+                aspectRatio="reel"
+                accept="video"
+                onChange={(url) => setEditingReel({ ...editingReel, videoUrl: url })}
+                helpText="Directly upload 9:16 MP4 video to Cloudinary for native mobile playback."
               />
             </div>
 
             <div>
-              <label className="block text-gray-300 font-bold mb-1">Instagram Reel URL *</label>
+              <label className="block text-gray-300 font-bold mb-1">Instagram Reel URL (Optional)</label>
               <input
                 type="url"
-                required
                 value={editingReel.instagramUrl || ''}
                 onChange={(e) => setEditingReel({ ...editingReel, instagramUrl: e.target.value })}
+                placeholder="https://www.instagram.com/reel/..."
                 className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white"
               />
             </div>
@@ -1755,12 +1824,13 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
               />
             </div>
             <div>
-              <label className="block text-gray-300 font-bold mb-1">Image URL</label>
-              <input
-                type="url"
-                value={editingService.image || ''}
-                onChange={(e) => setEditingService({ ...editingService, image: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white"
+              <CloudinaryMediaUploader
+                label="Service Image"
+                value={editingService.image}
+                aspectRatio="video"
+                accept="image"
+                onChange={(url) => setEditingService({ ...editingService, image: url })}
+                helpText="Upload service showcase photo to Cloudinary."
               />
             </div>
             <div>

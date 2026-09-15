@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Booking } from '../types';
 import confetti from 'canvas-confetti';
 import { CheckCircle2, Calendar, MapPin, MessageCircle, ArrowRight, Home, Sparkles } from 'lucide-react';
+import { getWhatsAppUrl } from '../config/whatsapp';
 
 interface BookingSuccessPageProps {
   navigate: (path: string) => void;
@@ -34,9 +35,10 @@ export const BookingSuccessPage: React.FC<BookingSuccessPageProps> = ({ navigate
     }
   }, []);
 
-  const waMessage = booking
-    ? encodeURIComponent(`Hi Harsha, I just submitted booking request #${booking.id} for "${booking.service}" on ${booking.eventDate} in ${booking.city}. Looking forward to discussing coverage!`)
-    : encodeURIComponent('Hi Harsha, I just submitted a booking request with LEOX!');
+  const waRawMessage = booking
+    ? `Hi LeoX, I just submitted booking request #${booking.id} for "${booking.service}" on ${booking.eventDate} in ${booking.city}. Looking forward to discussing coverage!`
+    : 'Hi LeoX, I just submitted a booking request with LEOX!';
+  const whatsappUrl = getWhatsAppUrl({ message: waRawMessage });
 
   return (
     <div className="pt-28 pb-24 min-h-screen bg-[#08080a] flex items-center justify-center">
@@ -56,7 +58,7 @@ export const BookingSuccessPage: React.FC<BookingSuccessPageProps> = ({ navigate
               YOU'RE IN THE CALENDAR QUEUE!
             </h1>
             <p className="mt-3 text-sm sm:text-base text-gray-300 max-w-xl mx-auto leading-relaxed">
-              Mesapam Sri Harsha has received your booking brief. We are reviewing equipment scheduling and will reach out promptly.
+              LeoX has received your booking brief. We are reviewing equipment scheduling and will reach out promptly.
             </p>
           </div>
 
@@ -99,7 +101,7 @@ export const BookingSuccessPage: React.FC<BookingSuccessPageProps> = ({ navigate
             <div className="space-y-2 text-xs text-gray-400">
               <div className="flex items-start gap-2.5">
                 <span className="w-5 h-5 rounded-full bg-white/[0.08] text-white flex items-center justify-center font-bold text-[10px] shrink-0">1</span>
-                <span>Harsha verifies crew availability and prepares your customized package shot list.</span>
+                <span>LeoX verifies crew availability and prepares your customized package shot list.</span>
               </div>
               <div className="flex items-start gap-2.5">
                 <span className="w-5 h-5 rounded-full bg-white/[0.08] text-white flex items-center justify-center font-bold text-[10px] shrink-0">2</span>
@@ -115,10 +117,11 @@ export const BookingSuccessPage: React.FC<BookingSuccessPageProps> = ({ navigate
           {/* Action CTAs */}
           <div className="pt-6 border-t border-[#20222f] flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href={`https://wa.me/919849000000?text=${waMessage}`}
+              id="booking-success-whatsapp-btn"
+              href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/20 transition-colors"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20ba59] active:scale-[0.99] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/20 transition-all hover:-translate-y-0.5"
             >
               <MessageCircle className="w-4 h-4" />
               <span>Connect Instantly On WhatsApp</span>

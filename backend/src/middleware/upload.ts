@@ -1,17 +1,13 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { ROOT_DIR } from '../database/db';
+import os from 'os';
 
-// Ensure uploads directories exist
-export const uploadsDir = path.join(ROOT_DIR, 'public', 'uploads');
-export const frontendUploadsDir = path.join(ROOT_DIR, 'frontend', 'public', 'uploads');
+// Use a temporary folder for files being streamed to Cloudinary
+export const uploadsDir = path.join(os.tmpdir(), 'leox_uploads');
 
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
-}
-if (!fs.existsSync(frontendUploadsDir)) {
-  fs.mkdirSync(frontendUploadsDir, { recursive: true });
 }
 
 const storage = multer.diskStorage({
@@ -28,17 +24,25 @@ const storage = multer.diskStorage({
 export const upload = multer({
   storage,
   limits: {
-    fileSize: 50 * 1024 * 1024, // 50MB
+    fileSize: 100 * 1024 * 1024, // 100MB limit for high-res images and videos
   },
   fileFilter: (_req, file, cb) => {
-    const allowed = /jpeg|jpg|png|webp|gif|mp4|mov|webm|svg/;
+    const allowedExts = /jpeg|jpg|png|webp|gif|svg|avif|mp4|mov|webm|mkv|avi/;
     const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
-    const mime = file.mimetype.toLowerCase();
+    const mime = (file.mimetype || '').toLowerCase();
 
-    if (allowed.test(ext) || allowed.test(mime)) {
+    if (
+      allowedExts.test(ext) ||
+      mime.startsWith('image/') ||
+      mime.startsWith('video/')
+    ) {
       cb(null, true);
     } else {
-      cb(new Error('Only images (JPEG, PNG, WEBP, GIF, SVG) and videos (MP4, MOV, WEBM) are supported.'));
+      cb(
+        new Error(
+          'Unsupported file format. Please upload an image (JPG, PNG, WEBP, GIF, SVG) or video (MP4, MOV, WEBM).'
+        )
+      );
     }
   },
 });

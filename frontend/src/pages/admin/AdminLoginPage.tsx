@@ -11,7 +11,7 @@ interface AdminLoginPageProps {
 export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ navigate }) => {
   const { login } = useAuth();
   const { success, error } = useToast();
-  const [username, setUsername] = useState('harsha@leox');
+  const [username, setUsername] = useState('admin@leox');
   const [password, setPassword] = useState('leoX@4536');
   const [submitting, setSubmitting] = useState(false);
 
@@ -30,7 +30,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ navigate }) => {
   };
 
   const fillDefaultCredentials = () => {
-    setUsername('harsha@leox');
+    setUsername('admin@leox');
     setPassword('leoX@4536');
   };
 
@@ -56,7 +56,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ navigate }) => {
                 LEOX STUDIO ADMIN
               </h2>
               <p className="text-xs text-gray-400 mt-1">
-                Authorized access for Mesapam Sri Harsha & lead producers.
+                Authorized access for LeoX studio director & lead producers.
               </p>
             </div>
           </div>
@@ -73,7 +73,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ navigate }) => {
                 <span>Default Credentials</span>
               </div>
               <div className="text-gray-300 font-mono text-[11px]">
-                User: <span className="text-white font-semibold">harsha@leox</span> &bull; Pass: <span className="text-white font-semibold">leoX@4536</span>
+                User: <span className="text-white font-semibold">admin@leox</span> &bull; Pass: <span className="text-white font-semibold">leoX@4536</span>
               </div>
             </div>
             <span className="text-[10px] font-bold text-gray-400 group-hover:text-white uppercase">
@@ -94,7 +94,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ navigate }) => {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="harsha@leox"
+                  placeholder="admin@leox"
                   className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#161722] border border-[#27293a] text-white text-sm focus:outline-none focus:border-[#E50914] transition-colors"
                 />
               </div>

@@ -380,18 +380,24 @@ export const api = {
     return request<{ analytics: AnalyticsData }>('/analytics');
   },
 
-  // Upload
-  async uploadMedia(file: File): Promise<{ url: string; publicId: string }> {
+  // Upload to Cloudinary via backend
+  async uploadMedia(
+    file: File,
+    resourceType?: 'image' | 'video'
+  ): Promise<{ url: string; secure_url: string; publicId: string; resourceType?: string }> {
     const formData = new FormData();
     formData.append('media', file);
-    return request<{ url: string; publicId: string }>('/upload', {
+    if (resourceType) {
+      formData.append('resourceType', resourceType);
+    }
+    return request<{ url: string; secure_url: string; publicId: string; resourceType?: string }>('/upload', {
       method: 'POST',
       body: formData,
     });
   },
 
   // Messages (Contact)
-  async sendMessage(data: { name: string; email: string; phone?: string; subject?: string; message: string }): Promise<{ success: boolean; message: string }> {
+  async sendMessage(data: { name: string; email: string; phone?: string; service?: string; subject?: string; message: string }): Promise<{ success: boolean; message: string }> {
     return request<{ success: boolean; message: string }>('/messages', {
       method: 'POST',
       body: JSON.stringify(data),

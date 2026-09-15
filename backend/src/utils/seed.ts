@@ -17,23 +17,27 @@ export async function seedDatabase() {
 
   // 1. Seed Admin
   const existingAdmins = await AdminModel.find();
-  const adminEmail = (process.env.ADMIN_EMAIL || 'harsha@leox').toLowerCase();
   const rawPassword = process.env.ADMIN_PASSWORD || 'leoX@4536';
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(rawPassword, salt);
 
-  const foundAdmin = existingAdmins.find(a => a.email.toLowerCase() === adminEmail);
-  if (!foundAdmin) {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(rawPassword, salt);
-    await AdminModel.create({
-      name: 'Mesapam Sri Harsha',
-      email: adminEmail,
-      password: hashedPassword,
-      role: 'superadmin',
-      lastLogin: new Date().toISOString(),
-    });
-    console.log(`[SEED] Admin account seeded: ${adminEmail}`);
-  } else {
-    console.log(`[SEED] Admin account already exists: ${foundAdmin.email}`);
+  const adminEmails = [
+    (process.env.ADMIN_EMAIL || 'admin@leox').toLowerCase(),
+    'harsha@leox',
+  ];
+
+  for (const email of adminEmails) {
+    const foundAdmin = existingAdmins.find(a => a.email.toLowerCase() === email);
+    if (!foundAdmin) {
+      await AdminModel.create({
+        name: 'LeoX Director',
+        email,
+        password: hashedPassword,
+        role: 'superadmin',
+        lastLogin: new Date().toISOString(),
+      });
+      console.log(`[SEED] Admin account seeded: ${email}`);
+    }
   }
 
   // 2. Seed Settings
@@ -432,7 +436,7 @@ export async function seedDatabase() {
         customerName: 'Aditya & Ananya Varma',
         customerRole: 'Wedding Clients',
         eventType: 'Luxury Wedding (Vijayawada)',
-        review: 'Harsha and the LEOX team are unmatched. We had 3 viral reels on our Instagram before our reception breakfast was even served! The cinematic grade looks like an international movie.',
+        review: 'LeoX and the team are unmatched. We had 3 viral reels on our Instagram before our reception breakfast was even served! The cinematic grade looks like an international movie.',
         rating: 5,
         photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop',
         published: true,
@@ -450,7 +454,7 @@ export async function seedDatabase() {
         customerName: 'Shreya Chunduri',
         customerRole: 'Fashion Designer & Founder',
         eventType: 'Brand Campaign Shoot (Bangalore)',
-        review: 'Mesapam Sri Harsha has an extraordinary eye for lighting and geometry. The mood, the pacing of the reels, and the color tone set our collection apart. Truly an artistic force.',
+        review: 'LeoX has an extraordinary eye for lighting and geometry. The mood, the pacing of the reels, and the color tone set our collection apart. Truly an artistic force.',
         rating: 5,
         photo: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=300&auto=format&fit=crop',
         published: true,

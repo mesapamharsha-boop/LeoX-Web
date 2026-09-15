@@ -1,6 +1,7 @@
 import React from 'react';
 import { Package } from '../types';
-import { Check, Star, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Check, Star, ArrowRight, ShieldCheck, MessageCircle } from 'lucide-react';
+import { getWhatsAppUrl } from '../config/whatsapp';
 
 interface PackagesPageProps {
   packages: Package[];
@@ -112,12 +113,24 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({ packages, navigate }
               </p>
             </div>
           </div>
-          <button
-            onClick={() => navigate('/contact')}
-            className="shrink-0 px-6 py-3 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] text-white text-xs font-bold uppercase tracking-wider border border-white/10"
-          >
-            Request Custom Quote
-          </button>
+          <div className="shrink-0 flex flex-col sm:flex-row items-center gap-3">
+            <a
+              id="packages-whatsapp-quote-btn"
+              href={getWhatsAppUrl({ message: 'Hi, I would like to inquire about a custom package and quote for an upcoming event.' })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-3 rounded-xl bg-[#102418] hover:bg-[#153020] border border-emerald-500/40 text-emerald-400 hover:text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
+            >
+              <MessageCircle className="w-4 h-4 text-[#25D366]" />
+              <span>WhatsApp Quote</span>
+            </a>
+            <button
+              onClick={() => navigate('/contact')}
+              className="px-6 py-3 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] text-white text-xs font-bold uppercase tracking-wider border border-white/10 transition-colors"
+            >
+              Contact Form
+            </button>
+          </div>
         </div>
       </div>
     </div>

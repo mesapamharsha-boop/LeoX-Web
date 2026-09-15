@@ -58,7 +58,7 @@ export const createReel = async (req: Request, res: Response): Promise<void> => 
       thumbnail: thumbnail.trim(),
       videoUrl: videoUrl ? videoUrl.trim() : '',
       instagramUrl: instagramUrl ? instagramUrl.trim() : 'https://www.instagram.com/leox_shoots/',
-      views: views || '25K+',
+      views: views ? views.trim() : undefined,
       featured: Boolean(featured),
       published: published !== undefined ? Boolean(published) : true,
       order: Number(order) || 0,

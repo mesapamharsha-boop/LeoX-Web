@@ -17,12 +17,15 @@ export interface Booking {
   eventDate: string;
   city: string;
   venue: string;
-  eventDetails: string;
+  eventDetails?: string;
   expectedGuests?: string;
   budgetRange?: string;
   instagramHandle?: string;
   additionalRequirements?: string;
   status: 'NEW' | 'CONTACTED' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED';
+  whatsappStatus?: 'pending' | 'sent' | 'failed';
+  whatsappMessageId?: string;
+  whatsappError?: string;
   internalNotes?: string;
   createdAt: string;
   updatedAt?: string;

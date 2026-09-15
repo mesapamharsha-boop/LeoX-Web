@@ -14,7 +14,7 @@ export const TermsPage: React.FC = () => {
         <section className="space-y-4 text-sm leading-relaxed">
           <h2 className="text-lg font-heading font-bold text-white">1. Booking & Retainer</h2>
           <p>
-            An inquiry submitted via our website does not guarantee calendar reservation until confirmed by Mesapam Sri Harsha. Once a date is verified, the specified advance retainer must be transferred to lock crew equipment.
+            An inquiry submitted via our website does not guarantee calendar reservation until confirmed by LeoX. Once a date is verified, the specified advance retainer must be transferred to lock crew equipment.
           </p>
         </section>
 

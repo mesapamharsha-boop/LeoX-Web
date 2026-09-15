@@ -1,16 +1,29 @@
 import React from 'react';
 import { Logo } from './Logo';
-import { Instagram, Mail, Phone, MapPin, ArrowUpRight, Shield, Heart } from 'lucide-react';
+import { Instagram, Mail, Phone, MapPin, ArrowUpRight, Shield, Heart, MessageCircle } from 'lucide-react';
+import { getWhatsAppUrl, formatWhatsAppDisplayNumber } from '../../config/whatsapp';
+import { SiteSettings } from '../../types';
 
 interface FooterProps {
   navigate: (path: string) => void;
+  settings?: SiteSettings | null;
 }
 
-export const Footer: React.FC<FooterProps> = ({ navigate }) => {
+export const Footer: React.FC<FooterProps> = ({ navigate, settings }) => {
   const handleNav = (path: string) => {
     navigate(path);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const email = settings?.email || 'contact@leox.in';
+  const whatsAppNumber = settings?.whatsAppNumber;
+  const whatsappUrl = whatsAppNumber
+    ? `https://wa.me/${whatsAppNumber.replace(/\D/g, '')}`
+    : getWhatsAppUrl();
+  const whatsappDisplay = whatsAppNumber || formatWhatsAppDisplayNumber();
+  const instagramUrl = settings?.instagramUrl || 'https://www.instagram.com/leox_shoots/';
+  const address = settings?.address || 'Vijayawada • Hyderabad • Available Pan-India';
+  const businessName = settings?.businessName || 'LEOX';
 
   return (
     <footer id="main-footer" className="bg-[#050507] border-t border-[#181920] text-gray-400 pt-16 pb-12">
@@ -20,29 +33,40 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
           <div className="lg:col-span-5 space-y-5">
             <Logo size="lg" onClick={() => handleNav('/')} />
             <p className="text-sm leading-relaxed text-gray-400 max-w-md">
-              LEOX is a signature visual production company founded by <strong className="text-white">Mesapam Sri Harsha</strong>. We specialize in cinematic event photography, broadcast-grade videography, and viral Instagram reels designed to elevate personal and corporate milestones into enduring legacies.
+              {businessName} is a signature visual production company. We specialize in cinematic event photography, broadcast-grade videography, and viral Instagram reels designed to elevate personal and corporate milestones into enduring legacies.
             </p>
 
             <div className="pt-2 flex flex-col gap-2.5 text-xs">
               <a
-                href="mailto:mesapamharsha@gmail.com"
+                href={`mailto:${email}`}
                 className="flex items-center gap-2.5 text-gray-300 hover:text-white transition-colors"
               >
                 <Mail className="w-4 h-4 text-[#E50914]" />
-                <span>mesapamharsha@gmail.com</span>
+                <span>{email}</span>
               </a>
               <a
-                href="https://www.instagram.com/leox_shoots/"
+                id="footer-whatsapp-link"
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 text-gray-300 hover:text-[#25D366] transition-colors group"
+                aria-label={`Chat on WhatsApp at ${whatsappDisplay}`}
+              >
+                <MessageCircle className="w-4 h-4 text-[#25D366] group-hover:scale-110 transition-transform" />
+                <span>WhatsApp: {whatsappDisplay}</span>
+              </a>
+              <a
+                href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2.5 text-gray-300 hover:text-white transition-colors"
               >
                 <Instagram className="w-4 h-4 text-[#E50914]" />
-                <span>@leox_shoots (Official Instagram)</span>
+                <span>Official Instagram</span>
               </a>
               <div className="flex items-center gap-2.5 text-gray-400">
                 <MapPin className="w-4 h-4 text-[#E50914]" />
-                <span>Vijayawada &bull; Hyderabad &bull; Available Pan-India</span>
+                <span>{address}</span>
               </div>
             </div>
           </div>
@@ -55,7 +79,7 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
             <ul className="space-y-2.5 text-sm">
               {[
                 { label: 'Home', path: '/' },
-                { label: 'About Mesapam Sri Harsha', path: '/about' },
+                { label: 'About LeoX', path: '/about' },
                 { label: 'Cinematic Services', path: '/services' },
                 { label: 'Portfolio & Events', path: '/portfolio' },
                 { label: 'Viral 9:16 Reels', path: '/reels' },
@@ -101,7 +125,7 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-[#181920] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
           <div>
-            &copy; {new Date().getFullYear()} <strong className="text-white">LEOX</strong>. Founded by Mesapam Sri Harsha. All Rights Reserved.
+            &copy; {new Date().getFullYear()} <strong className="text-white">LEOX</strong>. All Rights Reserved.
           </div>
 
           <div className="flex items-center gap-5">

@@ -9,17 +9,17 @@ interface EmailPayload {
 class EmailService {
   private transporter: Transporter | null = null;
   private isConfigured = false;
-  private adminEmail = process.env.NOTIFICATION_EMAIL || 'mesapamharsha@gmail.com';
+  private adminEmail = process.env.CONTACT_EMAIL || process.env.NOTIFICATION_EMAIL || 'mesapamharsha@gmail.com';
 
   constructor() {
     this.init();
   }
 
   private init() {
-    const host = process.env.EMAIL_HOST;
-    const user = process.env.EMAIL_USER;
-    const pass = process.env.EMAIL_PASSWORD;
-    const port = Number(process.env.EMAIL_PORT) || 587;
+    const host = process.env.SMTP_HOST || process.env.EMAIL_HOST;
+    const user = process.env.SMTP_USER || process.env.EMAIL_USER;
+    const pass = process.env.SMTP_PASSWORD || process.env.EMAIL_PASSWORD;
+    const port = Number(process.env.SMTP_PORT || process.env.EMAIL_PORT) || 587;
 
     if (host && user && pass) {
       try {
@@ -53,8 +53,9 @@ class EmailService {
     }
 
     try {
+      const fromAddress = process.env.SMTP_USER || process.env.EMAIL_USER || this.adminEmail;
       await this.transporter.sendMail({
-        from: `"LEOX Productions" <${process.env.EMAIL_USER}>`,
+        from: `"LEOX Productions" <${fromAddress}>`,
         to: payload.to,
         subject: payload.subject,
         html: payload.html,
@@ -122,7 +123,7 @@ class EmailService {
             </div>
           </div>
           <div class="footer">
-            LEOX Productions &bull; Mesapam Sri Harsha &bull; mesapamharsha@gmail.com
+            LEOX Productions &bull; ${this.adminEmail}
           </div>
         </div>
       </body>
@@ -175,7 +176,7 @@ class EmailService {
           <div class="content">
             <div class="greeting">Thank you, ${data.name}!</div>
             <p style="color: #d1d5db; font-size: 14px;">
-              Your inquiry has been received by Mesapam Sri Harsha and the LEOX team. We are thrilled at the opportunity to capture your upcoming event with cinematic precision.
+              Your inquiry has been received by LeoX and the production team. We are thrilled at the opportunity to capture your upcoming event with cinematic precision.
             </p>
 
             <div class="summary-card">
@@ -195,8 +196,8 @@ class EmailService {
             </div>
           </div>
           <div class="footer">
-            LEOX Productions &bull; Mesapam Sri Harsha<br/>
-            Email: mesapamharsha@gmail.com &bull; Instagram: @leox_shoots
+            LEOX Productions<br/>
+            Email: ${this.adminEmail} &bull; Instagram: @leox_shoots
           </div>
         </div>
       </body>
@@ -214,23 +215,61 @@ class EmailService {
     name: string;
     email: string;
     phone: string;
+    service?: string;
     subject: string;
     message: string;
   }) {
+    const safeMessage = data.message ? data.message.replace(/\n/g, '<br/>') : '';
     const html = `
-      <div style="background:#0c0d12; color:#fff; padding:24px; font-family:sans-serif; border-radius:8px; border:1px solid #232530;">
-        <h2 style="color:#E50914; margin-top:0;">New Contact Message on LEOX</h2>
-        <p><strong>From:</strong> ${data.name} (${data.email}, ${data.phone})</p>
-        <p><strong>Subject:</strong> ${data.subject}</p>
-        <div style="background:#161720; padding:16px; border-radius:6px; margin-top:12px; line-height:1.6;">
-          ${data.message}
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { margin: 0; padding: 0; background-color: #08080a; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #f2f2f4; }
+          .container { max-width: 600px; margin: 20px auto; background: #111217; border: 1px solid #22242c; border-radius: 12px; overflow: hidden; }
+          .header { background: #08080a; padding: 26px; text-align: center; border-bottom: 2px solid #E50914; }
+          .brand-title { color: #ffffff; font-size: 24px; font-weight: 900; letter-spacing: 4px; margin: 0; }
+          .brand-accent { color: #E50914; }
+          .content { padding: 26px; }
+          .badge { display: inline-block; background: rgba(229, 9, 20, 0.15); color: #FF4D55; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 18px; }
+          .field-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1f2027; font-size: 14px; }
+          .label { color: #9ca3af; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+          .value { color: #ffffff; font-weight: 600; text-align: right; }
+          .message-box { margin-top: 18px; padding: 16px; background: #181a22; border-radius: 8px; border-left: 3px solid #E50914; font-size: 14px; line-height: 1.6; color: #e5e7eb; }
+          .footer { text-align: center; padding: 18px; color: #6b7280; font-size: 12px; border-top: 1px solid #1f2027; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1 class="brand-title">LEO<span class="brand-accent">X</span></h1>
+            <p style="margin: 6px 0 0; color: #9ca3af; font-size: 12px; letter-spacing: 2px;">NEW CONTACT ENQUIRY</p>
+          </div>
+          <div class="content">
+            <span class="badge">📩 Contact Form Submission</span>
+            <div class="field-row"><span class="label">Visitor Name</span><span class="value">${data.name}</span></div>
+            <div class="field-row"><span class="label">Email Address</span><span class="value"><a href="mailto:${data.email}" style="color:#FF4D55; text-decoration:none;">${data.email}</a></span></div>
+            <div class="field-row"><span class="label">Phone / WhatsApp</span><span class="value">${data.phone || 'Not provided'}</span></div>
+            <div class="field-row"><span class="label">Shoot / Service Type</span><span class="value" style="color: #FF4D55;">${data.service || 'General Enquiry'}</span></div>
+            <div class="field-row"><span class="label">Subject</span><span class="value">${data.subject || 'Website Enquiry'}</span></div>
+            
+            <div class="message-box">
+              <strong style="color: #ffffff; display: block; margin-bottom: 8px;">Message / Event Details:</strong>
+              ${safeMessage}
+            </div>
+          </div>
+          <div class="footer">
+            LEOX Visual Media &bull; Notification Sent to: ${this.adminEmail}
+          </div>
         </div>
-      </div>
+      </body>
+      </html>
     `;
 
     return this.sendMail({
       to: this.adminEmail,
-      subject: `💬 [LEOX MESSAGE] ${data.subject} from ${data.name}`,
+      subject: `💬 [LEOX ENQUIRY] ${data.subject || 'Website Message'} from ${data.name}`,
       html,
     });
   }

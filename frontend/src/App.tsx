@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
+import { FloatingWhatsApp } from './components/common/FloatingWhatsApp';
 
 // Public Pages
 import { HomePage } from './pages/HomePage';
@@ -57,33 +58,42 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Fetch initial public content
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const [servRes, portRes, reelRes, pkgRes, testRes, setRes] = await Promise.all([
-          api.getServices().catch(() => ({ services: [] })),
-          api.getPortfolio().catch(() => ({ projects: [] })),
-          api.getReels().catch(() => ({ reels: [] })),
-          api.getPackages().catch(() => ({ packages: [] })),
-          api.getTestimonials().catch(() => ({ testimonials: [] })),
-          api.getSettings().catch(() => ({ settings: null as any })),
-        ]);
+  // Fetch public content and keep synced with Admin updates
+  const loadData = useCallback(async () => {
+    try {
+      const [servRes, portRes, reelRes, pkgRes, testRes, setRes] = await Promise.all([
+        api.getServices().catch(() => ({ services: [] })),
+        api.getPortfolio().catch(() => ({ projects: [] })),
+        api.getReels().catch(() => ({ reels: [] })),
+        api.getPackages().catch(() => ({ packages: [] })),
+        api.getTestimonials().catch(() => ({ testimonials: [] })),
+        api.getSettings().catch(() => ({ settings: null as any })),
+      ]);
 
-        if (servRes.services) setServices(servRes.services);
-        if (portRes.projects) setProjects(portRes.projects);
-        if (reelRes.reels) setReels(reelRes.reels);
-        if (pkgRes.packages) setPackages(pkgRes.packages);
-        if (testRes.testimonials) setTestimonials(testRes.testimonials);
-        if (setRes.settings) setSettings(setRes.settings);
-      } catch (err) {
-        console.warn('[App] Error fetching initial data:', err);
-      } finally {
-        setLoading(false);
-      }
+      if (servRes.services) setServices(servRes.services);
+      if (portRes.projects) setProjects(portRes.projects);
+      if (reelRes.reels) setReels(reelRes.reels);
+      if (pkgRes.packages) setPackages(pkgRes.packages);
+      if (testRes.testimonials) setTestimonials(testRes.testimonials);
+      if (setRes.settings) setSettings(setRes.settings);
+    } catch (err) {
+      console.warn('[App] Error fetching initial data:', err);
+    } finally {
+      setLoading(false);
     }
-    loadData();
   }, []);
+
+  useEffect(() => {
+    loadData();
+
+    // Listen for real-time data update events triggered from Admin Panel
+    const handleDataUpdated = () => {
+      loadData();
+    };
+
+    window.addEventListener('leox:data-updated', handleDataUpdated);
+    return () => window.removeEventListener('leox:data-updated', handleDataUpdated);
+  }, [loadData]);
 
   // Determine whether to display the public navbar and footer
   const isAdminDashboard = currentPath.startsWith('/admin/dashboard');
@@ -98,6 +108,7 @@ export default function App() {
             projects={projects}
             reels={reels}
             testimonials={testimonials}
+            settings={settings}
             navigate={navigate}
           />
         );
@@ -112,7 +123,7 @@ export default function App() {
       case '/packages':
         return <PackagesPage packages={packages} navigate={navigate} />;
       case '/contact':
-        return <ContactPage navigate={navigate} />;
+        return <ContactPage navigate={navigate} settings={settings} />;
       case '/book':
         return (
           <BookingPage
@@ -132,7 +143,7 @@ export default function App() {
       case '/admin/login':
         return <AdminLoginPage navigate={navigate} />;
       case '/admin/dashboard':
-        return <AdminDashboardPage navigate={navigate} />;
+        return <AdminDashboardPage navigate={navigate} onDataUpdated={loadData} />;
       default:
         return (
           <div className="min-h-[80vh] flex flex-col items-center justify-center text-center p-6 bg-[#08080a]">
@@ -157,15 +168,18 @@ export default function App() {
       <ToastProvider>
         <div className="min-h-screen bg-[#08080a] text-[#f2f2f4] flex flex-col selection:bg-[#E50914] selection:text-white">
           {/* Public Navbar (hidden on admin dashboard) */}
-          {!isAdminDashboard && <Navbar currentPath={currentPath} navigate={navigate} />}
+          {!isAdminDashboard && <Navbar currentPath={currentPath} navigate={navigate} settings={settings} />}
 
           {/* Main Content Area */}
           <main className="flex-1 w-full">
             {renderContent()}
           </main>
 
+          {/* Floating WhatsApp Quick Action (Public pages) */}
+          {!isAdminDashboard && <FloatingWhatsApp settings={settings} />}
+
           {/* Public Footer (hidden on admin dashboard) */}
-          {!isAdminDashboard && <Footer navigate={navigate} />}
+          {!isAdminDashboard && <Footer navigate={navigate} settings={settings} />}
         </div>
       </ToastProvider>
     </AuthProvider>

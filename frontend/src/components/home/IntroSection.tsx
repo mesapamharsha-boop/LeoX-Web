@@ -1,11 +1,15 @@
 import React from 'react';
 import { Camera, Film, Smartphone, Flame, Sparkles, UserCheck, ArrowUpRight } from 'lucide-react';
+import { SiteSettings } from '../../types';
 
 interface IntroSectionProps {
   navigate: (path: string) => void;
+  settings?: SiteSettings | null;
 }
 
-export const IntroSection: React.FC<IntroSectionProps> = ({ navigate }) => {
+export const IntroSection: React.FC<IntroSectionProps> = ({ navigate, settings }) => {
+  const ownerName = settings?.ownerName || 'LeoX';
+  const businessName = settings?.businessName || 'LEOX';
   const capabilities = [
     {
       icon: Camera,
@@ -43,7 +47,7 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ navigate }) => {
     <section className="py-24 bg-[#0a0b0f] border-t border-[#161720] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left Column: Heading & Harsha Story */}
+          {/* Left Column: Heading & LeoX Story */}
           <div className="lg:col-span-6 space-y-6">
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#E50914]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#E50914]" />
@@ -57,7 +61,7 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ navigate }) => {
             </h2>
 
             <p className="text-gray-300 text-base sm:text-lg leading-relaxed font-normal">
-              Founded by visual artist <strong className="text-white">Mesapam Sri Harsha</strong>, LEOX was born to disrupt outdated media coverage. We discard static, formulaic videography in favor of high-energy pacing, editorial grade color grading, and modern social-first storytelling.
+              Founded by visual director <strong className="text-white">{ownerName}</strong>, {businessName} was born to disrupt outdated media coverage. We discard static, formulaic videography in favor of high-energy pacing, editorial grade color grading, and modern social-first storytelling.
             </p>
 
             <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
@@ -69,7 +73,7 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ navigate }) => {
                 onClick={() => navigate('/about')}
                 className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-[#FF3842] transition-colors group"
               >
-                <span>Discover Harsha's Creative Journey</span>
+                <span>Discover LeoX's Creative Journey</span>
                 <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </button>
             </div>

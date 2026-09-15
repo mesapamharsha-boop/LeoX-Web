@@ -6,7 +6,7 @@ export const WhyLeoxSection: React.FC = () => {
     {
       icon: Eye,
       title: 'CREATIVE VISION',
-      desc: 'Mesapam Sri Harsha blends architectural compositions with intimate, authentic human emotions so your captures feel like frames from high-budget cinema.',
+      desc: 'LeoX blends architectural compositions with intimate, authentic human emotions so your captures feel like frames from high-budget cinema.',
     },
     {
       icon: Zap,
@@ -26,7 +26,7 @@ export const WhyLeoxSection: React.FC = () => {
     {
       icon: UserCheck,
       title: 'PERSONALIZED SERVICE',
-      desc: 'Direct creative consultation with Harsha. From shot list planning to lighting cues, every detail is custom tailored around your personality and event theme.',
+      desc: 'Direct creative consultation with LeoX. From shot list planning to lighting cues, every detail is custom tailored around your personality and event theme.',
     },
     {
       icon: ShieldCheck,

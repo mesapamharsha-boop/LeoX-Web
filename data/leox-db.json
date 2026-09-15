@@ -1,15 +1,26 @@
 {
   "admins": [
     {
-      "name": "Mesapam Sri Harsha",
+      "name": "LeoX Director",
+      "email": "admin@leox",
+      "password": "$2b$10$Pr4fwS84m0g6jatlA62auesduMcCWus4jboz8E2BZTgsBWcT9MO.W",
+      "role": "superadmin",
+      "lastLogin": "2026-09-15T04:50:14.909Z",
+      "id": "lx_admin_primary",
+      "_id": "lx_admin_primary",
+      "createdAt": "2026-09-08T08:30:07.333Z",
+      "updatedAt": "2026-09-15T04:50:14.909Z"
+    },
+    {
+      "name": "LeoX Director",
       "email": "harsha@leox",
       "password": "$2b$10$Pr4fwS84m0g6jatlA62auesduMcCWus4jboz8E2BZTgsBWcT9MO.W",
       "role": "superadmin",
-      "lastLogin": "2026-09-08T10:03:39.158Z",
+      "lastLogin": "2026-09-15T04:50:17.381Z",
       "id": "lx_i6h6fzomtsesrfp",
       "_id": "lx_i6h6fzomtsesrfp",
       "createdAt": "2026-09-08T08:30:07.333Z",
-      "updatedAt": "2026-09-08T10:03:39.158Z"
+      "updatedAt": "2026-09-15T04:50:17.381Z"
     }
   ],
   "bookings": [
@@ -704,6 +715,43 @@
   "gallery": [],
   "messages": [
     {
+      "name": "Test User",
+      "email": "test@example.com",
+      "phone": "+91 9876543210",
+      "service": "Event / Wedding Cinematography",
+      "subject": "General Inquiry",
+      "message": "Testing the contact enquiry form with service field.",
+      "isRead": false,
+      "id": "lx_diukbqbmu270300",
+      "_id": "lx_diukbqbmu270300",
+      "createdAt": "2026-09-15T04:49:33.744Z",
+      "updatedAt": "2026-09-15T04:49:33.744Z"
+    },
+    {
+      "name": "nbdjjdb",
+      "email": "wdjbj@ssa",
+      "phone": "jdbq",
+      "subject": "sdhbhb",
+      "message": "ygydwyhybd",
+      "isRead": false,
+      "id": "lx_1rkece6mu25ry0n",
+      "_id": "lx_1rkece6mu25ry0n",
+      "createdAt": "2026-09-15T04:15:14.423Z",
+      "updatedAt": "2026-09-15T04:15:14.423Z"
+    },
+    {
+      "name": "h",
+      "email": "umar@gmacm",
+      "phone": "wdjnjdwnjnd",
+      "subject": "dwuhuhuhuhd",
+      "message": "jbjbjdbjsdbjbdjbsdjbsjdbjns",
+      "isRead": false,
+      "id": "lx_2lbo6v3mu25ak2y",
+      "_id": "lx_2lbo6v3mu25ak2y",
+      "createdAt": "2026-09-15T04:01:43.210Z",
+      "updatedAt": "2026-09-15T04:01:43.210Z"
+    },
+    {
       "name": "Test Inquirer",
       "email": "inquirer@test.com",
       "phone": "+91 88888 77777",
@@ -744,9 +792,9 @@
     "businessName": "LEOX",
     "ownerName": "Mesapam Sri Harsha",
     "email": "mesapamharsha@gmail.com",
-    "phone": "+91 91219 45367",
+    "phone": "+91 83744 04536",
     "instagramUrl": "https://www.instagram.com/leox_shoots/",
-    "whatsAppNumber": "+919121945367",
+    "whatsAppNumber": "8374404536",
     "address": "Vijayawada / Hyderabad, India",
     "city": "Vijayawada, India",
     "logo": "/assets/leox-logo.png",
@@ -757,7 +805,7 @@
     "socialLinks": {
       "instagram": "https://www.instagram.com/leox_shoots/",
       "youtube": "https://youtube.com",
-      "whatsapp": "https://wa.me/919121945367"
+      "whatsapp": "https://wa.me/918374404536"
     },
     "updatedAt": "2026-09-08T08:30:07.334Z"
   }

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { BookingModel, InquiryModel } from '../models/index';
 import { emailService } from '../services/emailService';
+import { whatsappService } from '../services/whatsappService';
 
 export const createBooking = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -11,6 +12,7 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
       service,
       package: pkg,
       eventDate,
+      bookingTime,
       city,
       venue,
       eventDetails,
@@ -21,10 +23,10 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
     } = req.body;
 
     // Required fields validation
-    if (!fullName || !phone || !email || !service || !eventDate || !city || !venue || !eventDetails) {
+    if (!fullName || !phone || !email || !service || !eventDate || !city || !venue) {
       res.status(400).json({
         success: false,
-        message: 'Please provide all required fields: Full Name, Phone, Email, Service, Event Date, City, Venue, and Event Details.',
+        message: 'Please provide all required fields: Full Name, Phone, Email, Service, Event Date, City, and Venue.',
       });
       return;
     }
@@ -42,6 +44,10 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
+    // Default event details if not specified
+    const finalEventDetails = (eventDetails || additionalRequirements || '').trim();
+
+    // 1. Create booking in MongoDB / Database
     const booking = await BookingModel.create({
       fullName: fullName.trim(),
       phone: phone.trim(),
@@ -51,16 +57,60 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
       eventDate,
       city: city.trim(),
       venue: venue.trim(),
-      eventDetails: eventDetails.trim(),
+      eventDetails: finalEventDetails,
       expectedGuests: expectedGuests || '',
       budgetRange: budgetRange || '',
       instagramHandle: instagramHandle ? instagramHandle.trim().replace(/^@/, '') : '',
       additionalRequirements: additionalRequirements || '',
       status: 'NEW',
+      whatsappStatus: 'pending',
       internalNotes: '',
     });
 
-    // Also mirror into inquiries for the admin unified inbox
+    const bookingId = booking.id || booking._id!;
+
+    // 2. Trigger automatic WhatsApp Cloud API notification to configured business number
+    let waResult: {
+      success: boolean;
+      status: 'pending' | 'sent' | 'failed';
+      messageId?: string;
+      error?: string;
+    } = {
+      success: false,
+      status: 'pending',
+    };
+
+    try {
+      waResult = await whatsappService.sendBookingNotification({
+        bookingId,
+        fullName: fullName.trim(),
+        phone: phone.trim(),
+        email: email.trim(),
+        service,
+        package: pkg,
+        eventDate,
+        bookingTime: bookingTime || '',
+        city: city.trim(),
+        venue: venue.trim(),
+        instagramHandle: instagramHandle ? instagramHandle.trim() : undefined,
+        eventDetails: finalEventDetails || undefined,
+      });
+
+      // Update booking with WhatsApp delivery status
+      await BookingModel.findByIdAndUpdate(bookingId, {
+        whatsappStatus: waResult.status,
+        whatsappMessageId: waResult.messageId,
+        whatsappError: waResult.error,
+      });
+    } catch (waErr: any) {
+      console.error('[BookingController] WhatsApp dispatch error:', waErr);
+      await BookingModel.findByIdAndUpdate(bookingId, {
+        whatsappStatus: 'failed',
+        whatsappError: waErr?.message || 'Failed to dispatch WhatsApp message',
+      });
+    }
+
+    // 3. Mirror into inquiries for unified inbox
     await InquiryModel.create({
       name: fullName.trim(),
       email: email.trim().toLowerCase(),
@@ -69,12 +119,11 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
       eventDate,
       city: city.trim(),
       venue: venue.trim(),
-      message: `[Direct Booking Request - ${pkg || 'Custom'}] ${eventDetails}`,
+      message: `[Direct Booking Request - ${pkg || 'Custom'}] ${finalEventDetails || service}`,
       status: 'NEW',
     });
 
-    // Asynchronously send emails (does not block response)
-    const bookingId = booking.id || booking._id!;
+    // 4. Asynchronously send emails (does not block response)
     emailService.sendNewInquiryAdminNotification({
       name: fullName,
       email,
@@ -84,7 +133,7 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
       eventDate,
       city,
       venue,
-      eventDetails,
+      eventDetails: finalEventDetails,
       budget: budgetRange,
     }).catch(err => console.error('[Email] Failed to send admin alert:', err));
 
@@ -101,8 +150,12 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
 
     res.status(201).json({
       success: true,
-      message: 'Your booking request has been submitted successfully! Check your email for confirmation.',
-      booking,
+      message: 'Booking submitted successfully. We have received your booking request.',
+      booking: {
+        ...booking,
+        whatsappStatus: waResult.status,
+        whatsappMessageId: waResult.messageId,
+      },
     });
   } catch (error: any) {
     console.error('[Booking] Creation error:', error);

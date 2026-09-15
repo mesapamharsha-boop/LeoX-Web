@@ -28,14 +28,14 @@ export const PrivacyPage: React.FC = () => {
         <section className="space-y-4 text-sm leading-relaxed">
           <h2 className="text-lg font-heading font-bold text-white">3. Third-Party Sharing</h2>
           <p>
-            We do not sell, rent, or trade your personal contact details to third-party marketing services. Contact information is strictly used by Mesapam Sri Harsha and the LEOX crew for production coordination.
+            We do not sell, rent, or trade your personal contact details to third-party marketing services. Contact information is strictly used by the LEOX crew for production coordination.
           </p>
         </section>
 
         <section className="space-y-4 text-sm leading-relaxed">
           <h2 className="text-lg font-heading font-bold text-white">4. Contact & Inquiries</h2>
           <p>
-            For any questions regarding your stored booking records or media rights, contact <span className="text-white font-semibold">mesapamharsha@gmail.com</span>.
+            For any questions regarding your stored booking records or media rights, contact <span className="text-white font-semibold">contact@leox.in</span>.
           </p>
         </section>
       </div>

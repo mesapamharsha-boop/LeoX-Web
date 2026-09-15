@@ -207,11 +207,21 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ projects, navigate
         {activeProject && (
           <div className="space-y-6">
             <div className="relative rounded-xl overflow-hidden aspect-video bg-[#181924] border border-[#262837]">
-              <img
-                src={activeProject.coverImage}
-                alt={activeProject.title}
-                className="w-full h-full object-cover"
-              />
+              {activeProject.videoUrl ? (
+                <video
+                  src={activeProject.videoUrl}
+                  controls
+                  playsInline
+                  poster={activeProject.coverImage}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <img
+                  src={activeProject.coverImage}
+                  alt={activeProject.title}
+                  className="w-full h-full object-cover"
+                />
+              )}
               <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none">
                 <span className="px-3 py-1 rounded-md bg-[#E50914] text-white text-xs font-bold uppercase tracking-wider shadow-lg">
                   {activeProject.category}

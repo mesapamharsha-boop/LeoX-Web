@@ -8,13 +8,14 @@ import { WhyLeoxSection } from '../components/home/WhyLeoxSection';
 import { ProcessSection } from '../components/home/ProcessSection';
 import { TestimonialsSection } from '../components/home/TestimonialsSection';
 import { CtaSection } from '../components/home/CtaSection';
-import { Service, PortfolioProject, Reel, Testimonial } from '../types';
+import { Service, PortfolioProject, Reel, Testimonial, SiteSettings } from '../types';
 
 interface HomePageProps {
   services: Service[];
   projects: PortfolioProject[];
   reels: Reel[];
   testimonials: Testimonial[];
+  settings?: SiteSettings | null;
   navigate: (path: string) => void;
 }
 
@@ -23,12 +24,13 @@ export const HomePage: React.FC<HomePageProps> = ({
   projects,
   reels,
   testimonials,
+  settings,
   navigate,
 }) => {
   return (
     <div className="w-full">
-      <HeroSection navigate={navigate} />
-      <IntroSection navigate={navigate} />
+      <HeroSection navigate={navigate} settings={settings} />
+      <IntroSection navigate={navigate} settings={settings} />
       <ServicesGrid services={services} navigate={navigate} />
       <FeaturedPortfolio projects={projects} navigate={navigate} />
       <ReelsShowcase reels={reels} navigate={navigate} />

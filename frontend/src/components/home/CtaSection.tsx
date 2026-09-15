@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowRight, MessageSquare, Calendar } from 'lucide-react';
+import { ArrowRight, MessageSquare, Calendar, MessageCircle } from 'lucide-react';
+import { getWhatsAppUrl } from '../../config/whatsapp';
 
 interface CtaSectionProps {
   navigate: (path: string) => void;
@@ -23,7 +24,7 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ navigate }) => {
         </h2>
 
         <p className="text-gray-300 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-          Dates fill up rapidly across peak wedding and festival seasons. Connect directly with Mesapam Sri Harsha and reserve your shoot today.
+          Dates fill up rapidly across peak wedding and festival seasons. Connect directly with LeoX and reserve your shoot today.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -35,12 +36,23 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ navigate }) => {
             <span>BOOK A SHOOT</span>
           </button>
 
+          <a
+            id="cta-whatsapp-btn"
+            href={getWhatsAppUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#102418] hover:bg-[#153020] border border-emerald-500/40 text-emerald-400 hover:text-white text-xs font-bold tracking-widest uppercase transition-all flex items-center justify-center gap-2.5 shadow-lg shadow-emerald-950/40"
+          >
+            <MessageCircle className="w-4 h-4 text-[#25D366]" />
+            <span>CHAT ON WHATSAPP</span>
+          </a>
+
           <button
             onClick={() => navigate('/contact')}
             className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white text-xs font-bold tracking-widest uppercase border border-white/15 hover:border-white/30 transition-all flex items-center justify-center gap-2.5"
           >
             <MessageSquare className="w-4 h-4 text-[#E50914]" />
-            <span>CONTACT LEOX</span>
+            <span>CONTACT STUDIO</span>
           </button>
         </div>
       </div>

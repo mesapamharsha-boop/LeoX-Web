@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Logo } from './Logo';
-import { Menu, X, Instagram, Phone, Calendar, ArrowRight, Shield } from 'lucide-react';
+import { Menu, X, Instagram, Phone, Calendar, ArrowRight, Shield, MessageCircle } from 'lucide-react';
+import { getWhatsAppUrl, formatWhatsAppDisplayNumber } from '../../config/whatsapp';
+import { SiteSettings } from '../../types';
 
 interface NavbarProps {
   currentPath: string;
   navigate: (path: string) => void;
+  settings?: SiteSettings | null;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentPath, navigate }) => {
+export const Navbar: React.FC<NavbarProps> = ({ currentPath, navigate, settings }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const instagramUrl = settings?.instagramUrl || 'https://www.instagram.com/leox_shoots/';
+  const whatsAppNumber = settings?.whatsAppNumber;
+  const whatsappUrl = whatsAppNumber
+    ? `https://wa.me/${whatsAppNumber.replace(/\D/g, '')}`
+    : getWhatsAppUrl();
+  const whatsappDisplay = whatsAppNumber || formatWhatsAppDisplayNumber();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,10 +48,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, navigate }) => {
   return (
     <header
       id="main-navigation"
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-[#08080a]/90 backdrop-blur-md border-b border-[#1f212a] py-3 shadow-2xl'
-          : 'bg-gradient-to-b from-[#08080a]/90 via-[#08080a]/50 to-transparent py-5'
+      className={`fixed top-0 left-0 right-0 z-40 bg-[#08080a] border-b border-[#1c1d25] transition-all duration-200 ${
+        isScrolled ? 'py-3 shadow-2xl shadow-black/80' : 'py-4 shadow-xl shadow-black/60'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -77,9 +85,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, navigate }) => {
         </nav>
 
         {/* Right Action Buttons */}
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-3">
           <a
-            href="https://www.instagram.com/leox_shoots/"
+            href={instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-[#FF3842] transition-colors p-2 rounded-lg hover:bg-white/[0.04]"
@@ -87,6 +95,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, navigate }) => {
             id="nav-instagram-btn"
           >
             <Instagram className="w-4 h-4" />
+          </a>
+
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-[#25D366] transition-colors p-2 rounded-lg hover:bg-emerald-500/10"
+            aria-label={`Chat on WhatsApp at ${whatsappDisplay}`}
+            title={`Chat on WhatsApp (${whatsappDisplay})`}
+            id="nav-whatsapp-btn"
+          >
+            <MessageCircle className="w-4 h-4 text-[#25D366]" />
           </a>
 
           <button
@@ -124,7 +144,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, navigate }) => {
       {mobileMenuOpen && (
         <div
           id="mobile-drawer-overlay"
-          className="fixed inset-0 top-[60px] bg-[#08080a]/98 backdrop-blur-2xl z-50 lg:hidden flex flex-col justify-between p-6 border-t border-[#1c1d24] animate-fade-in"
+          className="fixed inset-0 top-[60px] bg-[#08080a] z-50 lg:hidden flex flex-col justify-between p-6 border-t border-[#1c1d24] animate-fade-in"
         >
           <div className="flex flex-col gap-2 pt-4">
             {navLinks.map((link) => {
@@ -146,7 +166,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, navigate }) => {
             })}
           </div>
 
-          <div className="space-y-4 pt-6 border-t border-[#1f202a]">
+          <div className="space-y-3 pt-6 border-t border-[#1f202a]">
+            <a
+              id="mobile-drawer-whatsapp-btn"
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 rounded-xl bg-[#102418] hover:bg-[#153020] border border-emerald-500/30 text-emerald-400 font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg transition-colors"
+            >
+              <MessageCircle className="w-4 h-4 text-[#25D366]" />
+              <span>Chat On WhatsApp ({whatsappDisplay})</span>
+            </a>
+
             <button
               onClick={() => handleNav('/book')}
               className="w-full py-3.5 rounded-xl bg-[#E50914] hover:bg-[#FF2E36] text-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 shadow-xl shadow-[#E50914]/30"
@@ -157,13 +188,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, navigate }) => {
 
             <div className="flex items-center justify-between text-xs text-gray-400 pt-2">
               <a
-                href="https://www.instagram.com/leox_shoots/"
+                href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 hover:text-white"
               >
                 <Instagram className="w-4 h-4 text-[#E50914]" />
-                <span>@leox_shoots</span>
+                <span>Instagram</span>
               </a>
 
               <button

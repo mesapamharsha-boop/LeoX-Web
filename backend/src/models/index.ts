@@ -24,12 +24,15 @@ export interface IBooking {
   eventDate: string;
   city: string;
   venue: string;
-  eventDetails: string;
+  eventDetails?: string;
   expectedGuests?: string;
   budgetRange?: string;
   instagramHandle?: string;
   additionalRequirements?: string;
   status: 'NEW' | 'CONTACTED' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED';
+  whatsappStatus?: 'pending' | 'sent' | 'failed';
+  whatsappMessageId?: string;
+  whatsappError?: string;
   internalNotes?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -157,6 +160,7 @@ export interface IMessage {
   name: string;
   email: string;
   phone: string;
+  service?: string;
   subject: string;
   message: string;
   isRead: boolean;
@@ -202,11 +206,11 @@ export const MessageModel = new Collection<IMessage>('messages');
 // Default site settings
 const DEFAULT_SITE_SETTINGS: ISiteSettings = {
   businessName: 'LEOX',
-  ownerName: 'Mesapam Sri Harsha',
+  ownerName: 'LeoX Director',
   email: 'mesapamharsha@gmail.com',
-  phone: '+91 91219 45367',
+  phone: '+91 83744 04536',
   instagramUrl: 'https://www.instagram.com/leox_shoots/',
-  whatsAppNumber: '+919121945367',
+  whatsAppNumber: '8374404536',
   address: 'Vijayawada / Hyderabad, India',
   city: 'Vijayawada, India',
   logo: '/assets/leox-logo.png',
@@ -217,7 +221,7 @@ const DEFAULT_SITE_SETTINGS: ISiteSettings = {
   socialLinks: {
     instagram: 'https://www.instagram.com/leox_shoots/',
     youtube: 'https://youtube.com',
-    whatsapp: 'https://wa.me/919121945367',
+    whatsapp: 'https://wa.me/918374404536',
   },
   updatedAt: new Date().toISOString(),
 };
