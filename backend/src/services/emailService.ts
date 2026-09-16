@@ -9,7 +9,7 @@ interface EmailPayload {
 class EmailService {
   private transporter: Transporter | null = null;
   private isConfigured = false;
-  private adminEmail = process.env.CONTACT_EMAIL || process.env.NOTIFICATION_EMAIL || 'mesapamharsha@gmail.com';
+  private adminEmail = process.env.CONTACT_EMAIL || process.env.NOTIFICATION_EMAIL || 'leoxshoots@gmail.com';
 
   constructor() {
     this.init();
@@ -55,7 +55,7 @@ class EmailService {
     try {
       const fromAddress = process.env.SMTP_USER || process.env.EMAIL_USER || this.adminEmail;
       await this.transporter.sendMail({
-        from: `"LEOX Productions" <${fromAddress}>`,
+        from: `LEOX <${fromAddress}>`,
         to: payload.to,
         subject: payload.subject,
         html: payload.html,
@@ -74,7 +74,9 @@ class EmailService {
     phone: string;
     service: string;
     package?: string;
+    packagePrice?: string;
     eventDate?: string;
+    bookingTime?: string;
     city?: string;
     venue?: string;
     eventDetails?: string;
@@ -95,7 +97,7 @@ class EmailService {
           .badge { display: inline-block; background: rgba(229, 9, 20, 0.15); color: #FF4D55; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
           .field-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #1f2027; }
           .label { color: #9ca3af; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
-          .value { color: #ffffff; font-weight: 600; font-size: 14px; }
+          .value { color: #ffffff; font-weight: 600; font-size: 14px; text-align: right; }
           .message-box { margin-top: 20px; padding: 16px; background: #181a22; border-radius: 8px; border-left: 3px solid #E50914; font-size: 14px; line-height: 1.6; }
           .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 12px; border-top: 1px solid #1f2027; }
         </style>
@@ -104,26 +106,28 @@ class EmailService {
         <div class="container">
           <div class="header">
             <h1 class="brand-title">LEO<span class="brand-accent">X</span></h1>
-            <p style="margin: 6px 0 0; color: #9ca3af; font-size: 12px; letter-spacing: 2px;">NEW CLIENT INQUIRY</p>
+            <p style="margin: 6px 0 0; color: #9ca3af; font-size: 12px; letter-spacing: 2px;">NEW CLIENT INQUIRY / BOOKING</p>
           </div>
           <div class="content">
             <span class="badge">🔥 New Booking / Inquiry Request</span>
-            <div class="field-row"><span class="label">Client Name</span><span class="value">${data.name}</span></div>
+            <div class="field-row"><span class="label">Customer Name</span><span class="value">${data.name}</span></div>
+            <div class="field-row"><span class="label">Phone Number</span><span class="value">${data.phone}</span></div>
             <div class="field-row"><span class="label">Email Address</span><span class="value">${data.email}</span></div>
-            <div class="field-row"><span class="label">Phone / WhatsApp</span><span class="value">${data.phone}</span></div>
-            <div class="field-row"><span class="label">Requested Service</span><span class="value" style="color: #FF4D55;">${data.service}</span></div>
-            ${data.package ? `<div class="field-row"><span class="label">Selected Package</span><span class="value">${data.package}</span></div>` : ''}
-            <div class="field-row"><span class="label">Event Date</span><span class="value">${data.eventDate || 'TBD'}</span></div>
+            <div class="field-row"><span class="label">Service Required</span><span class="value" style="color: #FF4D55;">${data.service}</span></div>
+            ${data.package ? `<div class="field-row"><span class="label">Selected LEOX Package</span><span class="value">${data.package}</span></div>` : ''}
+            ${data.packagePrice ? `<div class="field-row"><span class="label">Package Price</span><span class="value" style="color: #22c55e;">${data.packagePrice}</span></div>` : ''}
+            <div class="field-row"><span class="label">Booking Date</span><span class="value">${data.eventDate || 'TBD'}</span></div>
+            ${data.bookingTime ? `<div class="field-row"><span class="label">Booking Time</span><span class="value">${data.bookingTime}</span></div>` : ''}
             <div class="field-row"><span class="label">Location</span><span class="value">${data.city || 'N/A'}, ${data.venue || 'N/A'}</span></div>
-            ${data.budget ? `<div class="field-row"><span class="label">Budget Estimate</span><span class="value">${data.budget}</span></div>` : ''}
+            ${data.budget ? `<div class="field-row"><span class="label">Budget Range</span><span class="value">${data.budget}</span></div>` : ''}
             
             <div class="message-box">
-              <strong style="color: #f2f2f4; display: block; margin-bottom: 6px;">Event Details / Brief:</strong>
+              <strong style="color: #f2f2f4; display: block; margin-bottom: 6px;">Additional Details / Brief:</strong>
               ${data.eventDetails || 'No details provided.'}
             </div>
           </div>
           <div class="footer">
-            LEOX Productions &bull; ${this.adminEmail}
+            LEOX &bull; ${this.adminEmail}
           </div>
         </div>
       </body>
@@ -140,11 +144,15 @@ class EmailService {
   public async sendBookingConfirmationCustomerEmail(data: {
     name: string;
     email: string;
+    phone?: string;
     service: string;
     package?: string;
+    packagePrice?: string;
     eventDate: string;
+    bookingTime?: string;
     city: string;
     venue: string;
+    eventDetails?: string;
     bookingId: string;
   }) {
     const html = `
@@ -161,7 +169,7 @@ class EmailService {
           .content { padding: 35px 30px; line-height: 1.6; }
           .greeting { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 15px; }
           .summary-card { background: #171821; border-radius: 10px; border: 1px solid #282a36; padding: 20px; margin: 25px 0; }
-          .summary-item { margin-bottom: 10px; font-size: 14px; }
+          .summary-item { margin-bottom: 10px; font-size: 14px; display: flex; justify-content: space-between; }
           .summary-item:last-child { margin-bottom: 0; }
           .cta-btn { display: inline-block; background: #E50914; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 6px; font-weight: 700; letter-spacing: 1px; font-size: 14px; margin-top: 20px; text-transform: uppercase; }
           .footer { text-align: center; padding: 25px; color: #6b7280; font-size: 12px; border-top: 1px solid #1f2027; }
@@ -171,24 +179,30 @@ class EmailService {
         <div class="container">
           <div class="header">
             <h1 class="brand-title">LEO<span class="brand-accent">X</span></h1>
-            <p style="margin: 8px 0 0; color: #9ca3af; font-size: 11px; letter-spacing: 3px;">CINEMATIC PHOTOGRAPHY & REELS</p>
+            <p style="margin: 8px 0 0; color: #9ca3af; font-size: 11px; letter-spacing: 3px;">CINEMATIC VIDEOGRAPHY & REELS</p>
           </div>
           <div class="content">
             <div class="greeting">Thank you, ${data.name}!</div>
             <p style="color: #d1d5db; font-size: 14px;">
-              Your inquiry has been received by LeoX and the production team. We are thrilled at the opportunity to capture your upcoming event with cinematic precision.
+              Your booking request has been received by LEOX. We are reviewing our calendar availability and will connect with you via WhatsApp/phone shortly to confirm all details.
             </p>
 
             <div class="summary-card">
               <div class="summary-item"><strong style="color:#9ca3af;">Reference Code:</strong> <span style="color:#FF4D55; font-weight:700;">#${data.bookingId.slice(-6).toUpperCase()}</span></div>
-              <div class="summary-item"><strong style="color:#9ca3af;">Service:</strong> <span style="color:#ffffff;">${data.service}</span></div>
-              ${data.package ? `<div class="summary-item"><strong style="color:#9ca3af;">Package:</strong> <span style="color:#ffffff;">${data.package}</span></div>` : ''}
-              <div class="summary-item"><strong style="color:#9ca3af;">Target Event Date:</strong> <span style="color:#ffffff;">${data.eventDate}</span></div>
+              <div class="summary-item"><strong style="color:#9ca3af;">Customer Name:</strong> <span style="color:#ffffff;">${data.name}</span></div>
+              ${data.phone ? `<div class="summary-item"><strong style="color:#9ca3af;">Phone Number:</strong> <span style="color:#ffffff;">${data.phone}</span></div>` : ''}
+              <div class="summary-item"><strong style="color:#9ca3af;">Email Address:</strong> <span style="color:#ffffff;">${data.email}</span></div>
+              <div class="summary-item"><strong style="color:#9ca3af;">Selected Service:</strong> <span style="color:#ffffff;">${data.service}</span></div>
+              ${data.package ? `<div class="summary-item"><strong style="color:#9ca3af;">Selected LEOX Package:</strong> <span style="color:#ffffff;">${data.package}</span></div>` : ''}
+              ${data.packagePrice ? `<div class="summary-item"><strong style="color:#9ca3af;">Package Price:</strong> <span style="color:#22c55e; font-weight:700;">${data.packagePrice}</span></div>` : ''}
+              <div class="summary-item"><strong style="color:#9ca3af;">Booking Date:</strong> <span style="color:#ffffff;">${data.eventDate}</span></div>
+              ${data.bookingTime ? `<div class="summary-item"><strong style="color:#9ca3af;">Booking Time:</strong> <span style="color:#ffffff;">${data.bookingTime}</span></div>` : ''}
               <div class="summary-item"><strong style="color:#9ca3af;">Location:</strong> <span style="color:#ffffff;">${data.venue}, ${data.city}</span></div>
+              ${data.eventDetails ? `<div class="summary-item" style="display:block; margin-top: 12px; border-top: 1px solid #282a36; pt-2;"><strong style="color:#9ca3af; display:block; margin-bottom: 4px;">Additional Details:</strong> <span style="color:#d1d5db; font-size: 13px;">${data.eventDetails}</span></div>` : ''}
             </div>
 
             <p style="color: #9ca3af; font-size: 13px;">
-              Our team will review date availability, schedule our camera rig & lighting checklist, and get in touch directly via phone or WhatsApp within 12–24 hours.
+              Our team will reach out directly within a few hours. For immediate queries, email us at <a href="mailto:${this.adminEmail}" style="color:#FF4D55; text-decoration:none;">${this.adminEmail}</a>.
             </p>
 
             <div style="text-align: center;">
@@ -196,7 +210,7 @@ class EmailService {
             </div>
           </div>
           <div class="footer">
-            LEOX Productions<br/>
+            LEOX<br/>
             Email: ${this.adminEmail} &bull; Instagram: @leox_shoots
           </div>
         </div>
@@ -260,7 +274,7 @@ class EmailService {
             </div>
           </div>
           <div class="footer">
-            LEOX Visual Media &bull; Notification Sent to: ${this.adminEmail}
+            LEOX &bull; Official Email: ${this.adminEmail}
           </div>
         </div>
       </body>

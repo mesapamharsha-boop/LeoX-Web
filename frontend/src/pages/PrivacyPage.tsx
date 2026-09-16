@@ -35,7 +35,7 @@ export const PrivacyPage: React.FC = () => {
         <section className="space-y-4 text-sm leading-relaxed">
           <h2 className="text-lg font-heading font-bold text-white">4. Contact & Inquiries</h2>
           <p>
-            For any questions regarding your stored booking records or media rights, contact <span className="text-white font-semibold">contact@leox.in</span>.
+            For any questions regarding your stored booking records or media rights, contact <a href="mailto:leoxshoots@gmail.com" className="text-white hover:text-[#FF4D55] font-semibold underline">leoxshoots@gmail.com</a>.
           </p>
         </section>
       </div>

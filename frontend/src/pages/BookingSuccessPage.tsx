@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Booking } from '../types';
 import confetti from 'canvas-confetti';
-import { CheckCircle2, Calendar, MapPin, MessageCircle, ArrowRight, Home, Sparkles } from 'lucide-react';
+import { CheckCircle2, Calendar, MapPin, MessageCircle, ArrowRight, Home, Sparkles, Mail } from 'lucide-react';
 import { getWhatsAppUrl } from '../config/whatsapp';
 
 interface BookingSuccessPageProps {
@@ -36,8 +36,8 @@ export const BookingSuccessPage: React.FC<BookingSuccessPageProps> = ({ navigate
   }, []);
 
   const waRawMessage = booking
-    ? `Hi LeoX, I just submitted booking request #${booking.id} for "${booking.service}" on ${booking.eventDate} in ${booking.city}. Looking forward to discussing coverage!`
-    : 'Hi LeoX, I just submitted a booking request with LEOX!';
+    ? `Hi LEOX, I just submitted booking request #${booking.id} for "${booking.service}" on ${booking.eventDate} in ${booking.city}. Looking forward to discussing coverage!`
+    : 'Hi LEOX, I just submitted a booking request with LEOX!';
   const whatsappUrl = getWhatsAppUrl({ message: waRawMessage });
 
   return (
@@ -58,7 +58,7 @@ export const BookingSuccessPage: React.FC<BookingSuccessPageProps> = ({ navigate
               YOU'RE IN THE CALENDAR QUEUE!
             </h1>
             <p className="mt-3 text-sm sm:text-base text-gray-300 max-w-xl mx-auto leading-relaxed">
-              LeoX has received your booking brief. We are reviewing equipment scheduling and will reach out promptly.
+              LEOX has received your booking brief. We are reviewing schedule availability and will reach out promptly.
             </p>
           </div>
 
@@ -101,7 +101,7 @@ export const BookingSuccessPage: React.FC<BookingSuccessPageProps> = ({ navigate
             <div className="space-y-2 text-xs text-gray-400">
               <div className="flex items-start gap-2.5">
                 <span className="w-5 h-5 rounded-full bg-white/[0.08] text-white flex items-center justify-center font-bold text-[10px] shrink-0">1</span>
-                <span>LeoX verifies crew availability and prepares your customized package shot list.</span>
+                <span>LEOX verifies creator availability and prepares your customized package shot list.</span>
               </div>
               <div className="flex items-start gap-2.5">
                 <span className="w-5 h-5 rounded-full bg-white/[0.08] text-white flex items-center justify-center font-bold text-[10px] shrink-0">2</span>
@@ -111,6 +111,20 @@ export const BookingSuccessPage: React.FC<BookingSuccessPageProps> = ({ navigate
                 <span className="w-5 h-5 rounded-full bg-white/[0.08] text-white flex items-center justify-center font-bold text-[10px] shrink-0">3</span>
                 <span>Official calendar lock is completed with zero hassle.</span>
               </div>
+            </div>
+
+            {/* Email Support notice */}
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between text-xs text-gray-400 mt-2">
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-[#E50914] shrink-0" />
+                <span>Need immediate support or custom briefs?</span>
+              </div>
+              <a
+                href="mailto:leoxshoots@gmail.com"
+                className="text-white hover:text-[#FF4D55] font-semibold underline transition-colors"
+              >
+                leoxshoots@gmail.com
+              </a>
             </div>
           </div>
 

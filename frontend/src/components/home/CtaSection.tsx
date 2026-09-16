@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, MessageSquare, Calendar, MessageCircle } from 'lucide-react';
+import { MessageSquare, Calendar, MessageCircle } from 'lucide-react';
 import { getWhatsAppUrl } from '../../config/whatsapp';
 
 interface CtaSectionProps {
@@ -24,7 +24,7 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ navigate }) => {
         </h2>
 
         <p className="text-gray-300 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-          Dates fill up rapidly across peak wedding and festival seasons. Connect directly with LeoX and reserve your shoot today.
+          Dates fill up rapidly across celebrations, creators, and brands. Reserve your LEOX session today and get high-impact reels delivered instantly.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

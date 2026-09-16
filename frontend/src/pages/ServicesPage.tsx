@@ -21,7 +21,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ services, navigate }
             SERVICES & EXPERTISE.
           </h1>
           <p className="mt-4 text-base sm:text-lg text-gray-300 leading-relaxed font-normal">
-            From high-octane viral Instagram reel production to theatrical full-day wedding and festival cinema films, discover the tailored disciplines offered by LEOX.
+            From high-octane viral Instagram reel production to mobile-first celebration and creator sessions, discover the tailored disciplines offered by LEOX.
           </p>
         </div>
 

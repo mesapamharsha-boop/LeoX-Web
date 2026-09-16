@@ -1,6 +1,6 @@
 # LEOX — Complete Frontend & Backend Monorepo Architecture
 
-Production-grade web application and portfolio management system for **LEOX** (Mesapam Sri Harsha — Fashion, Wedding, Celebrity & Event Photographer / Filmmaker).
+Production-grade web application and portfolio management system for **LEOX** (Shot on iPhone • Instant Reel Delivery).
 
 This repository is structured as a clean, decoupled monorepo with completely separated **frontend** and **backend** domains.
 

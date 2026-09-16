@@ -115,10 +115,17 @@ export interface IPackage {
   _id?: string;
   packageName: string;
   slug: string;
-  description: string;
+  description?: string;
   price: string;
+  originalPrice?: string;
+  discount?: string;
+  coverage?: string;
+  reelsCount?: string;
+  badge?: string;
+  buttonText?: string;
   duration: string;
   includedServices: string[];
+  features?: string[];
   featured: boolean;
   popular?: boolean;
   published: boolean;
@@ -206,8 +213,8 @@ export const MessageModel = new Collection<IMessage>('messages');
 // Default site settings
 const DEFAULT_SITE_SETTINGS: ISiteSettings = {
   businessName: 'LEOX',
-  ownerName: 'LeoX Director',
-  email: 'mesapamharsha@gmail.com',
+  ownerName: 'LEOX Studio',
+  email: 'leoxshoots@gmail.com',
   phone: '+91 83744 04536',
   instagramUrl: 'https://www.instagram.com/leox_shoots/',
   whatsAppNumber: '8374404536',
@@ -215,8 +222,8 @@ const DEFAULT_SITE_SETTINGS: ISiteSettings = {
   city: 'Vijayawada, India',
   logo: '/assets/leox-logo.png',
   favicon: '/leox-icon.svg',
-  heroHeading: 'CAPTURE THE MOMENT. CREATE THE IMPACT.',
-  heroSubheading: 'Premium photography, high-octane videography, and viral Instagram reels designed to elevate events and personal brands into cinematic legacies.',
+  heroHeading: 'SHOT ON IPHONE. EDITED INSTANTLY.',
+  heroSubheading: 'LEOX creates high-impact short-form videos and viral reels shot on the latest iPhones, edited on the spot, and delivered instantly.',
   heroImage: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=2000&auto=format&fit=crop',
   socialLinks: {
     instagram: 'https://www.instagram.com/leox_shoots/',

@@ -12,30 +12,30 @@ export const TermsPage: React.FC = () => {
         </div>
 
         <section className="space-y-4 text-sm leading-relaxed">
-          <h2 className="text-lg font-heading font-bold text-white">1. Booking & Retainer</h2>
+          <h2 className="text-lg font-heading font-bold text-white">1. Booking & Reservation</h2>
           <p>
-            An inquiry submitted via our website does not guarantee calendar reservation until confirmed by LeoX. Once a date is verified, the specified advance retainer must be transferred to lock crew equipment.
+            An inquiry submitted via our website does not guarantee calendar reservation until confirmed by LEOX. Once a date is verified, the specified advance deposit must be transferred to lock your production date.
           </p>
         </section>
 
         <section className="space-y-4 text-sm leading-relaxed">
           <h2 className="text-lg font-heading font-bold text-white">2. Delivery Timelines</h2>
           <p>
-            Standard Instagram reel deliverables are finalized and dispatched within 24 to 48 hours following event wrap. Full documentary films, multi-camera edits, and master photographic galleries are delivered within 2 to 4 weeks depending on the selected package.
+            LEOX packages feature instant on-site editing and delivery during or immediately following your scheduled session. Edited reels are transferred directly to your smartphone so you can publish immediately.
           </p>
         </section>
 
         <section className="space-y-4 text-sm leading-relaxed">
           <h2 className="text-lg font-heading font-bold text-white">3. Cancellation & Rescheduling</h2>
           <p>
-            Should an event date shift due to unforeseen circumstances, LEOX will make every reasonable effort to accommodate the new schedule subject to calendar availability.
+            Should an event date shift due to unforeseen circumstances, LEOX will make every reasonable effort to accommodate the new schedule subject to creator calendar availability.
           </p>
         </section>
 
         <section className="space-y-4 text-sm leading-relaxed">
-          <h2 className="text-lg font-heading font-bold text-white">4. Copyright & Artistic License</h2>
+          <h2 className="text-lg font-heading font-bold text-white">4. Artistic License & Content Rights</h2>
           <p>
-            LEOX maintains artistic freedom regarding color grading, musical scoring, and sequence pacing. Clients receive personal reproduction rights for all delivered assets.
+            LEOX maintains artistic freedom regarding mobile color grading, trending music synchronization, and sequence pacing. Clients receive full commercial/personal usage and posting rights for all delivered assets.
           </p>
         </section>
       </div>

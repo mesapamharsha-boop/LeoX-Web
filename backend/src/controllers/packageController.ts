@@ -16,20 +16,51 @@ export const getPackages = async (req: Request, res: Response): Promise<void> =>
 
 export const createPackage = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { packageName, slug, description, price, duration, includedServices, featured, popular, published } = req.body;
+    const {
+      packageName,
+      slug,
+      description,
+      price,
+      originalPrice,
+      discount,
+      coverage,
+      reelsCount,
+      badge,
+      buttonText,
+      duration,
+      includedServices,
+      features,
+      featured,
+      popular,
+      published,
+    } = req.body;
+
     if (!packageName || !price) {
       res.status(400).json({ success: false, message: 'Package name and price are required.' });
       return;
     }
+
+    const cleanServices = Array.isArray(includedServices)
+      ? includedServices
+      : Array.isArray(features)
+      ? features
+      : [];
 
     const pkg = await PackageModel.create({
       packageName: packageName.trim(),
       slug: slug || packageName.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
       description: description ? description.trim() : '',
       price: price.trim(),
-      duration: duration || 'Per Event',
-      includedServices: Array.isArray(includedServices) ? includedServices : [],
-      featured: Boolean(featured),
+      originalPrice: originalPrice ? originalPrice.trim() : '',
+      discount: discount ? discount.trim() : '',
+      coverage: coverage ? coverage.trim() : (duration || ''),
+      reelsCount: reelsCount ? reelsCount.trim() : '',
+      badge: badge ? badge.trim() : '',
+      buttonText: buttonText ? buttonText.trim() : `Book ${packageName.trim()}`,
+      duration: duration || coverage || 'Per Event',
+      includedServices: cleanServices,
+      features: cleanServices,
+      featured: featured !== undefined ? Boolean(featured) : true,
       popular: Boolean(popular),
       published: published !== undefined ? Boolean(published) : true,
     });
@@ -43,7 +74,20 @@ export const createPackage = async (req: Request, res: Response): Promise<void> 
 export const updatePackage = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const updated = await PackageModel.findByIdAndUpdate(id, req.body);
+    const data = { ...req.body };
+
+    // Synchronize features and includedServices if one is provided
+    if (data.features && !data.includedServices) {
+      data.includedServices = data.features;
+    } else if (data.includedServices && !data.features) {
+      data.features = data.includedServices;
+    }
+
+    if (data.coverage && !data.duration) {
+      data.duration = data.coverage;
+    }
+
+    const updated = await PackageModel.findByIdAndUpdate(id, data);
     if (!updated) {
       res.status(404).json({ success: false, message: 'Package not found.' });
       return;

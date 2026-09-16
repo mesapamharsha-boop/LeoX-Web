@@ -35,13 +35,13 @@ export const WHATSAPP_CONFIG = {
    */
   defaultMessage:
     (safeEnv.VITE_WHATSAPP_DEFAULT_MESSAGE as string | undefined)?.trim() ||
-    'Hi LeoX, I would like to know more about your photography and videography services.',
+    'Hi LEOX, I would like to know more about your shoot packages and instant reel delivery.',
 
   /**
    * Business display title
    */
-  businessName: 'LEOX Visual Media',
-  directorName: 'LeoX',
+  businessName: 'LEOX',
+  directorName: 'LEOX',
 } as const;
 
 /**

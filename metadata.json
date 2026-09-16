@@ -1,6 +1,6 @@
 {
-  "name": "LEOX | Premium Photography, Videography & Reels",
-  "description": "Premium photography, videography, Instagram reels and event-content booking platform by LeoX.",
+  "name": "LEOX | Shot on iPhone • Instant Reel Delivery",
+  "description": "LEOX creates high-impact short-form videos and viral reels shot on the latest iPhones, edited on the spot, and delivered instantly.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

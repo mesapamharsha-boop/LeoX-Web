@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, Film, Smartphone, Flame, Sparkles, UserCheck, ArrowUpRight } from 'lucide-react';
+import { Smartphone, Film, Flame, Sparkles, Sliders, ArrowUpRight, Zap } from 'lucide-react';
 import { SiteSettings } from '../../types';
 
 interface IntroSectionProps {
@@ -8,38 +8,37 @@ interface IntroSectionProps {
 }
 
 export const IntroSection: React.FC<IntroSectionProps> = ({ navigate, settings }) => {
-  const ownerName = settings?.ownerName || 'LeoX';
   const businessName = settings?.businessName || 'LEOX';
   const capabilities = [
     {
-      icon: Camera,
-      title: 'Event Photography',
-      desc: 'Raw candid moments, emotional highlights, and high-contrast ambient portraits.',
+      icon: Smartphone,
+      title: 'Shot On Latest iPhone',
+      desc: 'Mobile-first 4K ProRes capture, cinematic framing, and gimbal stabilization.',
+    },
+    {
+      icon: Zap,
+      title: 'Instant Reel Delivery',
+      desc: 'High-energy vertical reels professionally edited on the spot and delivered immediately.',
     },
     {
       icon: Film,
-      title: 'Event Videography',
-      desc: 'Theatrical motion picture films, gimbal stabilization, and drone aerial framing.',
-    },
-    {
-      icon: Smartphone,
-      title: 'Instagram Reels & Shorts',
-      desc: 'Vertical 9:16 viral edits with trend audio synchronization and same-day delivery.',
+      title: 'Celebration & Event Content',
+      desc: 'Capturing candid emotion, high points, and electric atmospheres without bulky equipment.',
     },
     {
       icon: Flame,
       title: 'Short-Form Content',
-      desc: 'High-speed pacing and color science designed to captivate algorithmic audiences.',
+      desc: 'Rhythm-synced pacing and color grading designed to captivate Instagram and TikTok feeds.',
     },
     {
       icon: Sparkles,
       title: 'Creative & Fashion Shoots',
-      desc: 'Haute-couture aesthetics, dramatic studio lighting, and high-concept art direction.',
+      desc: 'Editorial aesthetics, vibrant styling, and high-concept mobile art direction.',
     },
     {
-      icon: UserCheck,
-      title: 'Personal Branding',
-      desc: 'Executive founder profiles, media kit packages, and modern digital presence.',
+      icon: Sliders,
+      title: 'On-Site Color & Sound',
+      desc: 'Instant audio syncing, viral sound design, and custom cinematic color grading.',
     },
   ];
 
@@ -47,7 +46,7 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ navigate, settings }
     <section className="py-24 bg-[#0a0b0f] border-t border-[#161720] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left Column: Heading & LeoX Story */}
+          {/* Left Column: Heading & LEOX Story */}
           <div className="lg:col-span-6 space-y-6">
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#E50914]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#E50914]" />
@@ -55,25 +54,25 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ navigate, settings }
             </div>
 
             <h2 className="text-3xl sm:text-5xl font-heading font-extrabold text-white leading-tight">
-              YOUR STORY.
+              YOUR MOMENT.
               <br />
-              <span className="text-[#E50914]">OUR LENS.</span>
+              <span className="text-[#E50914]">DELIVERED INSTANTLY.</span>
             </h2>
 
             <p className="text-gray-300 text-base sm:text-lg leading-relaxed font-normal">
-              Founded by visual director <strong className="text-white">{ownerName}</strong>, {businessName} was born to disrupt outdated media coverage. We discard static, formulaic videography in favor of high-energy pacing, editorial grade color grading, and modern social-first storytelling.
+              {businessName} was built to disrupt outdated event coverage. We discard static, formulaic videography and long turnaround times in favor of high-energy mobile pacing, professional color grading, and modern social-first storytelling shot exclusively on the latest iPhones.
             </p>
 
             <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-              Whether documenting a 2,000-guest luxury celebration in Vijayawada, an electric festival crowd in Hyderabad, or an intimate destination ceremony in Goa, our team merges cinema-grade glass with instant digital distribution.
+              Whether documenting a luxury wedding in Vijayawada, an electric festival crowd in Hyderabad, or a high-energy creator shoot, our team delivers finished, viral-ready reels on the spot so you can share while the hype is at its peak.
             </p>
 
             <div className="pt-2 flex flex-wrap gap-4">
               <button
-                onClick={() => navigate('/about')}
+                onClick={() => navigate('/packages')}
                 className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-[#FF3842] transition-colors group"
               >
-                <span>Discover LeoX's Creative Journey</span>
+                <span>Explore Official LEOX Packages</span>
                 <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </button>
             </div>

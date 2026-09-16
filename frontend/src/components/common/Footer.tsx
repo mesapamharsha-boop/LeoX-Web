@@ -1,6 +1,6 @@
 import React from 'react';
 import { Logo } from './Logo';
-import { Instagram, Mail, Phone, MapPin, ArrowUpRight, Shield, Heart, MessageCircle } from 'lucide-react';
+import { Instagram, Mail, MapPin, Shield, MessageCircle } from 'lucide-react';
 import { getWhatsAppUrl, formatWhatsAppDisplayNumber } from '../../config/whatsapp';
 import { SiteSettings } from '../../types';
 
@@ -15,7 +15,7 @@ export const Footer: React.FC<FooterProps> = ({ navigate, settings }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const email = settings?.email || 'contact@leox.in';
+  const email = settings?.email || 'leoxshoots@gmail.com';
   const whatsAppNumber = settings?.whatsAppNumber;
   const whatsappUrl = whatsAppNumber
     ? `https://wa.me/${whatsAppNumber.replace(/\D/g, '')}`
@@ -33,7 +33,7 @@ export const Footer: React.FC<FooterProps> = ({ navigate, settings }) => {
           <div className="lg:col-span-5 space-y-5">
             <Logo size="lg" onClick={() => handleNav('/')} />
             <p className="text-sm leading-relaxed text-gray-400 max-w-md">
-              {businessName} is a signature visual production company. We specialize in cinematic event photography, broadcast-grade videography, and viral Instagram reels designed to elevate personal and corporate milestones into enduring legacies.
+              {businessName} is an ultra-fast, mobile-first visual production brand. We specialize in high-impact short-form videos and viral reels shot exclusively on the latest iPhones, professionally edited on the spot, and delivered instantly.
             </p>
 
             <div className="pt-2 flex flex-col gap-2.5 text-xs">
@@ -79,7 +79,7 @@ export const Footer: React.FC<FooterProps> = ({ navigate, settings }) => {
             <ul className="space-y-2.5 text-sm">
               {[
                 { label: 'Home', path: '/' },
-                { label: 'About LeoX', path: '/about' },
+                { label: 'About LEOX', path: '/about' },
                 { label: 'Cinematic Services', path: '/services' },
                 { label: 'Portfolio & Events', path: '/portfolio' },
                 { label: 'Viral 9:16 Reels', path: '/reels' },
@@ -108,15 +108,15 @@ export const Footer: React.FC<FooterProps> = ({ navigate, settings }) => {
             <div className="space-y-2 text-sm">
               <div className="p-3 rounded-lg bg-[#0e0f14] border border-[#1c1d25]">
                 <div className="font-semibold text-white text-xs">Instagram Reels & Short-Form</div>
-                <div className="text-xs text-gray-400 mt-0.5">Rapid 24-hour turnaround, rhythm sound design.</div>
+                <div className="text-xs text-gray-400 mt-0.5">Instant on-site delivery, rhythm sound design.</div>
               </div>
               <div className="p-3 rounded-lg bg-[#0e0f14] border border-[#1c1d25]">
-                <div className="font-semibold text-white text-xs">Event & Wedding Cinematography</div>
-                <div className="text-xs text-gray-400 mt-0.5">Multi-camera cinema setups, high-res drone footage.</div>
+                <div className="font-semibold text-white text-xs">Celebrations & Event Content</div>
+                <div className="text-xs text-gray-400 mt-0.5">Shot on latest iPhones, on-the-spot mobile editing.</div>
               </div>
               <div className="p-3 rounded-lg bg-[#0e0f14] border border-[#1c1d25]">
                 <div className="font-semibold text-white text-xs">Personal Branding & Commercial</div>
-                <div className="text-xs text-gray-400 mt-0.5">Founder portraits, magazine lookbooks, launch events.</div>
+                <div className="text-xs text-gray-400 mt-0.5">Brand identity, creator lookbooks, launch events.</div>
               </div>
             </div>
           </div>

@@ -56,7 +56,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ navigate }) => {
                 LEOX STUDIO ADMIN
               </h2>
               <p className="text-xs text-gray-400 mt-1">
-                Authorized access for LeoX studio director & lead producers.
+                Authorized access for LEOX studio administrators & producers.
               </p>
             </div>
           </div>

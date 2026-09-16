@@ -42,6 +42,8 @@ import {
   Users,
   Eye,
   RefreshCw,
+  Star,
+  Check,
 } from 'lucide-react';
 
 interface AdminDashboardPageProps {
@@ -102,6 +104,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
   const [editingService, setEditingService] = useState<Partial<Service> | null>(null);
   const [packageModalOpen, setPackageModalOpen] = useState(false);
   const [editingPackage, setEditingPackage] = useState<Partial<Package> | null>(null);
+  const [newPackageFeature, setNewPackageFeature] = useState('');
   const [testimonialModalOpen, setTestimonialModalOpen] = useState(false);
   const [editingTestimonial, setEditingTestimonial] = useState<Partial<Testimonial> | null>(null);
 
@@ -625,7 +628,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
               LX
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-white truncate">{admin?.name || 'LeoX Director'}</div>
+              <div className="text-xs font-bold text-white truncate">{admin?.name || 'LEOX Admin'}</div>
               <div className="text-[10px] text-gray-400 truncate">{admin?.email || 'admin@leox'}</div>
             </div>
           </div>
@@ -1335,58 +1338,140 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
           {/* ===================== PACKAGES CMS TAB ===================== */}
           {activeTab === 'packages' && (
             <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <p className="text-xs text-gray-400">Manage curated client packages and prices.</p>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                  <h3 className="text-lg font-heading font-bold text-white">Curated LEOX Packages</h3>
+                  <p className="text-xs text-gray-400">Manage official LEOX packages, prices, discounts, coverage, and deliverables.</p>
+                </div>
                 <button
                   onClick={() => {
                     setEditingPackage({
                       packageName: '',
                       slug: '',
                       description: '',
-                      price: '₹75,000',
-                      duration: '1 Full Day Event',
-                      includedServices: ['2 Cinema Cameras', '1 Drone Rig', '2 Instagram Reels'],
+                      price: '₹1,599',
+                      originalPrice: '₹2,499',
+                      discount: '36% OFF',
+                      coverage: 'Up to 1 Hour',
+                      reelsCount: '1 Edited Reel',
+                      duration: 'Up to 1 Hour',
+                      badge: '',
+                      buttonText: 'Book LEOX Elite',
+                      includedServices: [
+                        'Up to 1 Hour On-Site Coverage',
+                        '1 High-Impact Edited Reel',
+                        'Instant Reel Delivery',
+                        'LEOX Branding Included',
+                        'Basic Color Grading & Audio Edit',
+                      ],
                       popular: false,
                       featured: true,
                       published: true,
                     });
                     setPackageModalOpen(true);
                   }}
-                  className="px-4 py-2 rounded-xl bg-[#E50914] text-white text-xs font-bold uppercase"
+                  className="px-4 py-2 rounded-xl bg-[#E50914] hover:bg-[#FF2E36] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-lg shadow-[#E50914]/20 transition-all"
                 >
-                  Add Package
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Add Package</span>
                 </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {packages.map((pkg) => (
-                  <div key={pkg.id} className="p-6 rounded-2xl bg-[#111218] border border-[#20222e] flex flex-col justify-between shadow-xl">
-                    <div>
-                      <h4 className="text-lg font-heading font-bold text-white">{pkg.packageName}</h4>
-                      <div className="text-2xl font-black text-white mt-1">{pkg.price}</div>
-                      <div className="text-xs text-gray-400 mt-1">{pkg.duration}</div>
-                      <p className="text-xs text-gray-300 mt-3">{pkg.description}</p>
-                    </div>
+                {packages.map((pkg) => {
+                  const isPopular = pkg.badge === 'MOST POPULAR' || pkg.popular;
+                  return (
+                    <div
+                      key={pkg.id || pkg._id}
+                      className={`p-6 rounded-2xl bg-[#111218] border flex flex-col justify-between shadow-xl transition-all ${
+                        isPopular
+                          ? 'border-[#E50914] shadow-[#E50914]/15'
+                          : 'border-[#20222e] hover:border-[#E50914]/50'
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          {pkg.badge ? (
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                              pkg.badge === 'MOST POPULAR' ? 'bg-[#E50914] text-white' : 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
+                            }`}>
+                              {pkg.badge}
+                            </span>
+                          ) : (
+                            <span className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Standard Tier</span>
+                          )}
+                          {pkg.discount && (
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-extrabold">
+                              {pkg.discount}
+                            </span>
+                          )}
+                        </div>
 
-                    <div className="pt-4 mt-6 border-t border-[#1e202c] flex justify-end gap-2">
-                      <button
-                        onClick={() => {
-                          setEditingPackage(pkg);
-                          setPackageModalOpen(true);
-                        }}
-                        className="px-3 py-1 rounded bg-white/[0.06] text-xs font-semibold"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeletePackage(pkg.id!)}
-                        className="p-1 text-gray-500 hover:text-red-400"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                        <h4 className="text-xl font-heading font-extrabold text-white mt-1">{pkg.packageName}</h4>
+
+                        <div className="flex items-baseline gap-2 mt-2">
+                          <span className="text-2xl font-black text-white">{pkg.price}</span>
+                          {pkg.originalPrice && (
+                            <span className="text-xs line-through text-gray-500 font-semibold">{pkg.originalPrice}</span>
+                          )}
+                        </div>
+
+                        <div className="mt-3 grid grid-cols-2 gap-1.5 text-[11px] text-gray-400 bg-[#161722] p-2 rounded-xl border border-[#232536]">
+                          <div className="flex items-center gap-1 truncate">
+                            <Clock className="w-3 h-3 text-[#E50914] shrink-0" />
+                            <span className="truncate">{pkg.coverage || pkg.duration}</span>
+                          </div>
+                          <div className="flex items-center gap-1 truncate">
+                            <Film className="w-3 h-3 text-[#E50914] shrink-0" />
+                            <span className="truncate">{pkg.reelsCount || '1 Reel'}</span>
+                          </div>
+                        </div>
+
+                        <p className="text-xs text-gray-400 mt-3 line-clamp-2 leading-relaxed">{pkg.description}</p>
+
+                        <div className="mt-4 space-y-1.5 border-t border-[#1e202c] pt-3">
+                          <div className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Included Features:</div>
+                          {(pkg.includedServices || pkg.features || []).slice(0, 4).map((f, i) => (
+                            <div key={i} className="text-[11px] text-gray-300 flex items-start gap-1.5 leading-snug">
+                              <Check className="w-3 h-3 text-emerald-400 shrink-0 mt-0.5" />
+                              <span className="truncate">{f}</span>
+                            </div>
+                          ))}
+                          {(pkg.includedServices || []).length > 4 && (
+                            <div className="text-[10px] text-gray-500 font-medium">
+                              + {(pkg.includedServices || []).length - 4} more features
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="pt-4 mt-5 border-t border-[#1e202c] flex items-center justify-between gap-2">
+                        <span className="text-[10px] text-gray-500 font-mono truncate">
+                          {pkg.buttonText || `Book ${pkg.packageName}`}
+                        </span>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            onClick={() => {
+                              setEditingPackage(pkg);
+                              setPackageModalOpen(true);
+                            }}
+                            className="px-3 py-1.5 rounded-lg bg-white/[0.08] hover:bg-[#E50914] text-white text-xs font-semibold transition-colors flex items-center gap-1"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                            <span>Edit</span>
+                          </button>
+                          <button
+                            onClick={() => handleDeletePackage(pkg.id!)}
+                            className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                            title="Delete Package"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -2045,53 +2130,237 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ navigate
       <Modal
         isOpen={packageModalOpen}
         onClose={() => setPackageModalOpen(false)}
-        title={editingPackage?.id ? 'Edit Package' : 'Add Package'}
-        maxWidth="md"
+        title={editingPackage?.id ? `Edit Package: ${editingPackage.packageName || ''}` : 'Add Package'}
+        maxWidth="lg"
       >
         {editingPackage && (
           <form onSubmit={handleSavePackage} className="space-y-4 text-xs">
-            <div>
-              <label className="block text-gray-300 font-bold mb-1">Package Name *</label>
-              <input
-                type="text"
-                required
-                value={editingPackage.packageName || ''}
-                onChange={(e) => setEditingPackage({ ...editingPackage, packageName: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 font-bold mb-1">Package Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingPackage.packageName || ''}
+                  onChange={(e) => setEditingPackage({ ...editingPackage, packageName: e.target.value })}
+                  placeholder="e.g. LEOX Pro+"
+                  className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white focus:outline-none focus:border-[#E50914]"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 font-bold mb-1">Current Price *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingPackage.price || ''}
+                  onChange={(e) => setEditingPackage({ ...editingPackage, price: e.target.value })}
+                  placeholder="e.g. ₹4,499"
+                  className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white focus:outline-none focus:border-[#E50914]"
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-gray-300 font-bold mb-1">Price *</label>
-              <input
-                type="text"
-                required
-                value={editingPackage.price || ''}
-                onChange={(e) => setEditingPackage({ ...editingPackage, price: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white"
-              />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 font-bold mb-1">Original Price (Strikethrough)</label>
+                <input
+                  type="text"
+                  value={editingPackage.originalPrice || ''}
+                  onChange={(e) => setEditingPackage({ ...editingPackage, originalPrice: e.target.value })}
+                  placeholder="e.g. ₹5,999"
+                  className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white focus:outline-none focus:border-[#E50914]"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 font-bold mb-1">Discount Text</label>
+                <input
+                  type="text"
+                  value={editingPackage.discount || ''}
+                  onChange={(e) => setEditingPackage({ ...editingPackage, discount: e.target.value })}
+                  placeholder="e.g. 25% OFF"
+                  className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white focus:outline-none focus:border-[#E50914]"
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-gray-300 font-bold mb-1">Duration</label>
-              <input
-                type="text"
-                value={editingPackage.duration || ''}
-                onChange={(e) => setEditingPackage({ ...editingPackage, duration: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white"
-              />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 font-bold mb-1">Coverage Duration</label>
+                <input
+                  type="text"
+                  value={editingPackage.coverage || editingPackage.duration || ''}
+                  onChange={(e) => setEditingPackage({ ...editingPackage, coverage: e.target.value, duration: e.target.value })}
+                  placeholder="e.g. Up to 3.5 Hours"
+                  className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white focus:outline-none focus:border-[#E50914]"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 font-bold mb-1">Edited Reels Count</label>
+                <input
+                  type="text"
+                  value={editingPackage.reelsCount || ''}
+                  onChange={(e) => setEditingPackage({ ...editingPackage, reelsCount: e.target.value })}
+                  placeholder="e.g. 3 Edited Reels"
+                  className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white focus:outline-none focus:border-[#E50914]"
+                />
+              </div>
             </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 font-bold mb-1">Badge Pill Text</label>
+                <input
+                  type="text"
+                  value={editingPackage.badge || ''}
+                  onChange={(e) => setEditingPackage({ ...editingPackage, badge: e.target.value })}
+                  placeholder="e.g. MOST POPULAR or RAW INCLUDED"
+                  className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white focus:outline-none focus:border-[#E50914]"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 font-bold mb-1">Button Text</label>
+                <input
+                  type="text"
+                  value={editingPackage.buttonText || ''}
+                  onChange={(e) => setEditingPackage({ ...editingPackage, buttonText: e.target.value })}
+                  placeholder="e.g. Book LEOX Pro+"
+                  className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white focus:outline-none focus:border-[#E50914]"
+                />
+              </div>
+            </div>
+
             <div>
               <label className="block text-gray-300 font-bold mb-1">Short Description</label>
               <textarea
                 rows={2}
                 value={editingPackage.description || ''}
                 onChange={(e) => setEditingPackage({ ...editingPackage, description: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white"
+                placeholder="Brief summary of package deliverables and turnaround"
+                className="w-full px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white focus:outline-none focus:border-[#E50914]"
               />
             </div>
+
+            {/* Package Features List Management */}
+            <div className="space-y-2">
+              <label className="block text-gray-300 font-bold">Package Features & Deliverables</label>
+              
+              {/* Add Feature input */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newPackageFeature}
+                  onChange={(e) => setNewPackageFeature(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      if (newPackageFeature.trim()) {
+                        const currentFeatures = editingPackage.includedServices || [];
+                        setEditingPackage({
+                          ...editingPackage,
+                          includedServices: [...currentFeatures, newPackageFeature.trim()],
+                          features: [...currentFeatures, newPackageFeature.trim()],
+                        });
+                        setNewPackageFeature('');
+                      }
+                    }
+                  }}
+                  placeholder="Type a feature and press Enter or click Add (e.g. Instant Reel Delivery)..."
+                  className="flex-1 px-3 py-2 rounded-xl bg-[#161722] border border-[#27293a] text-white focus:outline-none focus:border-[#E50914]"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (newPackageFeature.trim()) {
+                      const currentFeatures = editingPackage.includedServices || [];
+                      setEditingPackage({
+                        ...editingPackage,
+                        includedServices: [...currentFeatures, newPackageFeature.trim()],
+                        features: [...currentFeatures, newPackageFeature.trim()],
+                      });
+                      setNewPackageFeature('');
+                    }
+                  }}
+                  className="px-4 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] text-white font-bold transition-colors whitespace-nowrap"
+                >
+                  Add Feature
+                </button>
+              </div>
+
+              {/* Existing Features List */}
+              <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+                {(editingPackage.includedServices || []).map((feat, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#161722] border border-[#242637] text-gray-300"
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span className="truncate">{feat}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const updated = (editingPackage.includedServices || []).filter((_, i) => i !== idx);
+                        setEditingPackage({
+                          ...editingPackage,
+                          includedServices: updated,
+                          features: updated,
+                        });
+                      }}
+                      className="p-1 text-gray-500 hover:text-red-400 transition-colors ml-2"
+                      title="Remove feature"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+                {(!editingPackage.includedServices || editingPackage.includedServices.length === 0) && (
+                  <p className="text-gray-500 italic text-[11px]">No features added yet. Add features above.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Toggles */}
+            <div className="flex items-center gap-6 pt-2 border-t border-[#20222f]">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={Boolean(editingPackage.popular || editingPackage.badge === 'MOST POPULAR')}
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    setEditingPackage({
+                      ...editingPackage,
+                      popular: isChecked,
+                      badge: isChecked ? 'MOST POPULAR' : (editingPackage.badge === 'MOST POPULAR' ? '' : editingPackage.badge),
+                    });
+                  }}
+                  className="rounded bg-[#161722] border-[#27293a] text-[#E50914] focus:ring-0"
+                />
+                <span className="text-gray-300 font-semibold">Highlight as Most Popular</span>
+              </label>
+
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={editingPackage.published !== false}
+                  onChange={(e) => setEditingPackage({ ...editingPackage, published: e.target.checked })}
+                  className="rounded bg-[#161722] border-[#27293a] text-[#E50914] focus:ring-0"
+                />
+                <span className="text-gray-300 font-semibold">Published on Website</span>
+              </label>
+            </div>
+
             <div className="pt-4 border-t border-[#20222f] flex justify-end gap-2">
               <button
+                type="button"
+                onClick={() => setPackageModalOpen(false)}
+                className="px-4 py-2 rounded-lg bg-white/[0.06] hover:bg-white/[0.1] text-gray-300 font-bold"
+              >
+                Cancel
+              </button>
+              <button
                 type="submit"
-                className="px-5 py-2 rounded-lg bg-[#E50914] text-white font-bold"
+                className="px-6 py-2 rounded-lg bg-[#E50914] hover:bg-[#FF2E36] text-white font-bold transition-colors shadow-lg shadow-[#E50914]/20"
               >
                 Save Package
               </button>

@@ -123,14 +123,25 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
       status: 'NEW',
     });
 
-    // 4. Asynchronously send emails (does not block response)
+    // 4. Resolve package price for email confirmation
+    const PACKAGE_PRICES: Record<string, string> = {
+      'leox elite': '₹1,599',
+      'leox pro': '₹2,999',
+      'leox pro+': '₹4,499',
+      'leox max': '₹5,999',
+    };
+    const resolvedPrice = req.body.packagePrice || req.body.price || (pkg ? PACKAGE_PRICES[pkg.toLowerCase().trim()] : undefined) || budgetRange || '';
+
+    // Asynchronously send emails (does not block response)
     emailService.sendNewInquiryAdminNotification({
       name: fullName,
       email,
       phone,
       service,
       package: pkg,
+      packagePrice: resolvedPrice,
       eventDate,
+      bookingTime,
       city,
       venue,
       eventDetails: finalEventDetails,
@@ -140,11 +151,15 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
     emailService.sendBookingConfirmationCustomerEmail({
       name: fullName,
       email,
+      phone,
       service,
       package: pkg,
+      packagePrice: resolvedPrice,
       eventDate,
+      bookingTime,
       city,
       venue,
+      eventDetails: finalEventDetails,
       bookingId,
     }).catch(err => console.error('[Email] Failed to send customer confirmation:', err));
 

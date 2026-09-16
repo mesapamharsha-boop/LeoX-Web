@@ -31,7 +31,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigate, settings }) 
     message: '',
   });
 
-  const email = settings?.email || 'contact@leox.in';
+  const email = settings?.email || 'leoxshoots@gmail.com';
   const whatsAppNumber = settings?.whatsAppNumber;
   const whatsappUrl = whatsAppNumber
     ? `https://wa.me/${whatsAppNumber.replace(/\D/g, '')}`
@@ -168,7 +168,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigate, settings }) 
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-start gap-3.5 p-4 rounded-2xl bg-[#0f1d14] hover:bg-[#14291c] border border-emerald-500/40 text-gray-200 transition-all duration-200 group shadow-lg shadow-emerald-950/40"
-                  aria-label={`Chat with LeoX on WhatsApp at ${whatsappDisplay}`}
+                  aria-label={`Chat with LEOX on WhatsApp at ${whatsappDisplay}`}
                 >
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-[#25D366] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <MessageCircle className="w-5 h-5 fill-current text-[#25D366]" />
@@ -179,7 +179,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigate, settings }) 
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     </div>
                     <div className="text-base font-semibold text-white mt-0.5 group-hover:text-emerald-300 transition-colors">
-                      Chat with LeoX
+                      Chat with LEOX
                     </div>
                     <div className="text-xs text-emerald-400 font-mono mt-0.5 font-medium">
                       {whatsappDisplay}
@@ -209,7 +209,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigate, settings }) 
                   <Instagram className="w-5 h-5 text-[#E50914] shrink-0 mt-0.5" />
                   <div>
                     <div className="text-[11px] uppercase tracking-wider text-gray-400 font-bold">Official Instagram DM</div>
-                    <div className="text-sm font-semibold text-white mt-0.5">LeoX Shoots</div>
+                    <div className="text-sm font-semibold text-white mt-0.5">LEOX Shoots</div>
                   </div>
                 </a>
 

@@ -104,13 +104,22 @@ export interface Package {
   _id?: string;
   packageName: string;
   slug: string;
-  description: string;
+  description?: string;
   price: string;
+  originalPrice?: string;
+  discount?: string;
+  coverage?: string;
+  reelsCount?: string;
+  badge?: string;
+  buttonText?: string;
   duration: string;
   includedServices: string[];
+  features?: string[];
   featured: boolean;
   popular?: boolean;
   published: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Testimonial {

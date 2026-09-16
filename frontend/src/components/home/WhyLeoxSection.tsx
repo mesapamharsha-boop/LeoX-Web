@@ -1,37 +1,37 @@
 import React from 'react';
-import { Eye, Zap, Award, Smartphone, UserCheck, ShieldCheck } from 'lucide-react';
+import { Eye, Zap, Smartphone, Sliders, ShieldCheck, Share2 } from 'lucide-react';
 
 export const WhyLeoxSection: React.FC = () => {
   const pillars = [
     {
       icon: Eye,
       title: 'CREATIVE VISION',
-      desc: 'LeoX blends architectural compositions with intimate, authentic human emotions so your captures feel like frames from high-budget cinema.',
+      desc: 'LEOX blends dynamic framing with authentic human emotions so your short-form videos feel impactful, vibrant, and visually compelling.',
     },
     {
       icon: Zap,
-      title: 'FAST DELIVERY',
-      desc: 'No more waiting 2 months for event footage. With our dedicated on-site editors, receive curated Instagram reels within 24 hours while event hype is at its peak.',
-    },
-    {
-      icon: Award,
-      title: 'PROFESSIONAL QUALITY',
-      desc: 'Dual Sony Cinema Line bodies, G-Master f/1.2 & f/2.8 optics, DJI Pro Ronin stabilizers, and broadcast color grading calibrated for accurate skin tones.',
+      title: 'INSTANT DELIVERY',
+      desc: 'No more waiting weeks for footage. With our on-site creator workflows, receive professionally edited vertical reels delivered instantly on the spot.',
     },
     {
       icon: Smartphone,
-      title: 'SOCIAL-FIRST CONTENT',
-      desc: 'Native vertical 9:16 engineering, optimized aspect ratios, high-bitrate mobile exports, and viral audio cues tailored for Instagram algorithm acceleration.',
+      title: 'LATEST iPHONE SHOOTING',
+      desc: 'Shot exclusively on the latest iPhones utilizing advanced sensor profiles, Apple ProRes video, and gimbal mobile stabilization.',
     },
     {
-      icon: UserCheck,
-      title: 'PERSONALIZED SERVICE',
-      desc: 'Direct creative consultation with LeoX. From shot list planning to lighting cues, every detail is custom tailored around your personality and event theme.',
+      icon: Share2,
+      title: 'SOCIAL-FIRST CONTENT',
+      desc: 'Native vertical 9:16 engineering, high-bitrate mobile exports, and viral audio cues tailored for Instagram and TikTok algorithm acceleration.',
+    },
+    {
+      icon: Sliders,
+      title: 'ON-SITE EDITING',
+      desc: 'Color grading, beat-matching, and hook optimization performed in real-time so your content is ready to post while your event is still happening.',
     },
     {
       icon: ShieldCheck,
       title: 'SEAMLESS RELIABILITY',
-      desc: 'Redundant dual-card recording, cloud backup protocols, and strict on-time guarantees give you complete peace of mind on your most important day.',
+      desc: 'Instant cloud backup, rapid mobile transfer, and on-time guarantees give you complete peace of mind for your celebrations and brand moments.',
     },
   ];
 
@@ -48,7 +48,7 @@ export const WhyLeoxSection: React.FC = () => {
             WHY VISIONARIES CHOOSE LEOX.
           </h2>
           <p className="mt-4 text-gray-400 text-sm sm:text-base">
-            We operate at the convergence of traditional cinematic craftsmanship and next-generation social distribution.
+            We operate at the leading edge of iPhone cinematography and instant social media distribution.
           </p>
         </div>
 

@@ -17,7 +17,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   onNavigate,
   brandName = 'LEOX',
   phone = '+91 83744 04536',
-  email = 'contact@leox.in',
+  email = 'leoxshoots@gmail.com',
 }) => {
   return (
     <div className="min-h-screen flex flex-col bg-[#08080a] text-[#f2f2f4]">

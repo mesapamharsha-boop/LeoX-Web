@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Film } from 'lucide-react';
+import { ArrowRight, Film, Sparkles } from 'lucide-react';
 import { SiteSettings } from '../../types';
 
 interface HeroSectionProps {
@@ -10,7 +10,7 @@ interface HeroSectionProps {
 export const HeroSection: React.FC<HeroSectionProps> = ({ navigate, settings }) => {
   const bgImage =
     settings?.heroImage ||
-    'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=2000&auto=format&fit=crop';
+    'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2000&auto=format&fit=crop';
   const customHeading = settings?.heroHeading?.trim();
   const customSubheading = settings?.heroSubheading?.trim();
 
@@ -20,8 +20,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ navigate, settings }) 
       <div className="absolute inset-0 z-0">
         <img
           src={bgImage}
-          alt={settings?.businessName || 'LEOX Cinematic Production'}
-          className="w-full h-full object-cover object-center scale-105 filter brightness-[0.38] contrast-[1.15]"
+          alt={settings?.businessName || 'LEOX Visual Production'}
+          className="w-full h-full object-cover object-center scale-105 filter brightness-[0.35] contrast-[1.15]"
         />
         {/* Layered Vignette & Lighting gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#08080a] via-[#08080a]/60 to-[#08080a]/70" />
@@ -36,7 +36,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ navigate, settings }) 
         {/* Cinematic Badge */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/10 text-xs font-semibold tracking-widest uppercase text-gray-300 mb-6 backdrop-blur-md">
           <span className="w-2 h-2 rounded-full bg-[#E50914] animate-pulse" />
-          <span>{settings?.businessName || 'LEOX VISUAL MEDIA'} &bull; CINEMATIC PRODUCTION</span>
+          <span>LEOX &bull; SHOT ON iPHONE &bull; INSTANT DELIVERY</span>
         </div>
 
         {/* Main Brand Title */}
@@ -61,7 +61,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ navigate, settings }) 
         {/* Supporting Description */}
         <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
           {customSubheading ||
-            'Premium photography, high-octane videography, and viral Instagram reels. We craft cinematic narratives for luxury weddings, high-energy festivals, and visionary creators.'}
+            'Shot on the latest iPhones. Edited and delivered instantly. LEOX crafts high-impact short-form videos and viral reels for celebrations, creators, and brands with on-the-spot delivery.'}
         </p>
 
         {/* CTA Buttons */}
@@ -76,12 +76,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ navigate, settings }) 
           </button>
 
           <button
-            id="hero-view-portfolio-btn"
-            onClick={() => navigate('/portfolio')}
+            id="hero-view-packages-btn"
+            onClick={() => navigate('/packages')}
             className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-white text-sm font-bold tracking-wider uppercase border border-white/15 hover:border-white/30 transition-all duration-200 backdrop-blur-md flex items-center justify-center gap-2.5"
           >
-            <Film className="w-4 h-4 text-[#E50914]" />
-            <span>VIEW PORTFOLIO</span>
+            <Sparkles className="w-4 h-4 text-[#E50914]" />
+            <span>VIEW PACKAGES</span>
           </button>
         </div>
       </div>

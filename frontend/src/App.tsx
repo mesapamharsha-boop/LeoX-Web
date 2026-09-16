@@ -107,6 +107,7 @@ export default function App() {
             services={services}
             projects={projects}
             reels={reels}
+            packages={packages}
             testimonials={testimonials}
             settings={settings}
             navigate={navigate}

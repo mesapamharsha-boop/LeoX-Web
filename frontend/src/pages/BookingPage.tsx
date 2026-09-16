@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Service, Package } from '../types';
 import { api } from '../services/api';
 import { useToast } from '../context/ToastContext';
-import { ShieldCheck, Send, AlertCircle, CheckCircle2, Calendar, MapPin, Phone, Mail, Sparkles } from 'lucide-react';
+import { ShieldCheck, Send, AlertCircle, CheckCircle2, Calendar, MapPin, Phone, Mail, Sparkles, Check, Clock, Film } from 'lucide-react';
+import { DEFAULT_LEOX_PACKAGES } from './PackagesPage';
 import {
   validateAndNormalizeCustomerWhatsApp,
   validateProviderWhatsAppNumber,
@@ -58,6 +59,11 @@ export const BookingPage: React.FC<BookingPageProps> = ({
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
+
+  const availablePackages: Package[] = (packages && packages.length > 0) ? packages : DEFAULT_LEOX_PACKAGES;
+  const selectedPackage = availablePackages.find(
+    (p) => p.packageName.toLowerCase().trim() === (formData.package || '').toLowerCase().trim()
+  );
 
   useEffect(() => {
     const s = urlParams.get('service');
@@ -161,12 +167,14 @@ export const BookingPage: React.FC<BookingPageProps> = ({
         phone: formData.phone.trim(),
         email: formData.email.trim(),
         service: formData.service,
-        package: formData.package || undefined,
+        package: selectedPackage?.packageName || formData.package || undefined,
         eventDate: formData.eventDate,
         city: formData.city.trim(),
         venue: formData.venue.trim(),
         instagramHandle: formData.instagramHandle.trim() || undefined,
-        eventDetails: `Online booking request for ${formData.service} (${formData.package || 'Custom package'})`,
+        eventDetails: selectedPackage
+          ? `[Package: ${selectedPackage.packageName} (${selectedPackage.price}${selectedPackage.discount ? ` • ${selectedPackage.discount}` : ''})] Coverage: ${selectedPackage.coverage || selectedPackage.duration || 'Standard'}, Deliverables: ${selectedPackage.reelsCount || 'Edited Reels'}. Instant Reel Delivery.`
+          : `Online booking request for ${formData.service} (${formData.package || 'Custom package'})`,
       });
 
       setSubmittedBooking(response.booking || {
@@ -217,7 +225,10 @@ export const BookingPage: React.FC<BookingPageProps> = ({
                 Booking Request Received!
               </h2>
               <p className="text-gray-300 text-sm leading-relaxed">
-                Thank you, <span className="text-white font-bold">{submittedBooking.fullName}</span>. Your event details have been recorded and automatically dispatched to our production WhatsApp desk.
+                Thank you, <span className="text-white font-bold">{submittedBooking.fullName}</span>. Your event details have been recorded and dispatched to our production desk. Confirmation has been sent to your email. For immediate inquiries, reach us at{' '}
+                <a href="mailto:leoxshoots@gmail.com" className="text-[#FF4D55] hover:underline font-semibold">
+                  leoxshoots@gmail.com
+                </a>.
               </p>
             </div>
 
@@ -238,15 +249,27 @@ export const BookingPage: React.FC<BookingPageProps> = ({
                 </div>
               </div>
 
+              {submittedBooking.package && (
+                <div className="p-3.5 rounded-xl bg-[#7B182B]/15 border border-[#7B182B]/40 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#FF4D55]" />
+                    <div>
+                      <span className="text-[10px] text-gray-400 uppercase tracking-wider block font-bold">Selected Package</span>
+                      <span className="text-white font-bold text-sm">{submittedBooking.package}</span>
+                    </div>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                    Instant Reel Delivery
+                  </span>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div className="flex items-start gap-2.5">
                   <Sparkles className="w-4 h-4 text-[#E50914] shrink-0 mt-0.5" />
                   <div>
                     <span className="text-gray-400 font-bold block">Service</span>
                     <span className="text-white font-semibold">{submittedBooking.service}</span>
-                    {submittedBooking.package && (
-                      <span className="text-[11px] text-[#FF4D55] block">Package: {submittedBooking.package}</span>
-                    )}
                   </div>
                 </div>
 
@@ -442,19 +465,145 @@ export const BookingPage: React.FC<BookingPageProps> = ({
                   )}
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">
-                    Package Selection (Optional)
-                  </label>
+                <div className="sm:col-span-2 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-300">
+                      LEOX Package Selection
+                    </label>
+                    {formData.package && (
+                      <button
+                        type="button"
+                        onClick={() => handleChange('package', '')}
+                        className="text-[11px] text-gray-400 hover:text-white underline"
+                      >
+                        Clear Selection (Custom Request)
+                      </button>
+                    )}
+                  </div>
+
+                  {/* 4 Interactive Package Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {availablePackages.map((pkg) => {
+                      const isSelected = (formData.package || '').toLowerCase().trim() === pkg.packageName.toLowerCase().trim();
+                      return (
+                        <button
+                          key={pkg.id || pkg._id || pkg.packageName}
+                          type="button"
+                          onClick={() => handleChange('package', pkg.packageName)}
+                          className={`p-3.5 rounded-xl text-left transition-all border relative flex flex-col justify-between cursor-pointer ${
+                            isSelected
+                              ? 'bg-[#7B182B]/20 border-[#7B182B] shadow-lg shadow-[#7B182B]/25 ring-1 ring-[#7B182B]'
+                              : 'bg-[#171822] border-[#27293a] hover:border-[#7B182B]/50'
+                          }`}
+                        >
+                          <div>
+                            <div className="flex items-center justify-between gap-1 mb-1">
+                              {pkg.badge ? (
+                                <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${
+                                  pkg.badge === 'MOST POPULAR' ? 'bg-[#7B182B] text-white' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                }`}>
+                                  {pkg.badge}
+                                </span>
+                              ) : (
+                                <span className="text-[9px] text-gray-500 uppercase tracking-wider font-bold">Standard</span>
+                              )}
+                              {isSelected && <Check className="w-4 h-4 text-emerald-400 shrink-0" />}
+                            </div>
+
+                            <div className="font-bold text-white text-sm">
+                              {pkg.packageName}
+                            </div>
+
+                            <div className="flex items-baseline gap-1.5 mt-1">
+                              <span className="text-base font-extrabold text-[#FF4D55]">{pkg.price}</span>
+                              {pkg.originalPrice && (
+                                <span className="text-[10px] text-gray-500 line-through">{pkg.originalPrice}</span>
+                              )}
+                              {pkg.discount && (
+                                <span className="text-[9px] text-emerald-400 font-bold ml-auto">{pkg.discount}</span>
+                              )}
+                            </div>
+
+                            <div className="text-[11px] text-gray-400 mt-2 flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-gray-500 shrink-0" />
+                              <span className="truncate">{pkg.coverage || pkg.duration}</span>
+                            </div>
+                            <div className="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                              <Film className="w-3 h-3 text-gray-500 shrink-0" />
+                              <span className="truncate">{pkg.reelsCount || '1 Edited Reel'}</span>
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Selected Package Highlight Box */}
+                  {selectedPackage ? (
+                    <div className="p-4 rounded-xl bg-[#1c1318] border border-[#7B182B]/40 text-xs space-y-2.5">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#7B182B]/20 pb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-white text-sm">{selectedPackage.packageName}</span>
+                          {selectedPackage.badge && (
+                            <span className="px-2 py-0.5 rounded-full bg-[#7B182B] text-white text-[10px] font-black">
+                              {selectedPackage.badge}
+                            </span>
+                          )}
+                          {selectedPackage.discount && (
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                              {selectedPackage.discount}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-white font-black text-sm">
+                          {selectedPackage.price}
+                          {selectedPackage.originalPrice && (
+                            <span className="ml-1.5 text-xs text-gray-400 line-through font-normal">
+                              {selectedPackage.originalPrice}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-gray-300">
+                        <div className="flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 text-[#FF4D55]" />
+                          <span>Coverage: <strong className="text-white">{selectedPackage.coverage || selectedPackage.duration}</strong></span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Film className="w-3.5 h-3.5 text-[#FF4D55]" />
+                          <span>Deliverables: <strong className="text-white">{selectedPackage.reelsCount || '1 Reel'}</strong></span>
+                        </div>
+                      </div>
+
+                      <div className="pt-1">
+                        <span className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Included Deliverables:</span>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                          {(selectedPackage.includedServices || selectedPackage.features || []).map((feat, i) => (
+                            <div key={i} className="flex items-center gap-1.5 text-[11px] text-gray-200">
+                              <Check className="w-3 h-3 text-emerald-400 shrink-0" />
+                              <span className="truncate">{feat}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-xs text-gray-400 italic">
+                      Click one of the 4 packages above, or choose from the dropdown below for custom bookings.
+                    </div>
+                  )}
+
+                  {/* Fallback Dropdown */}
                   <select
                     value={formData.package}
                     onChange={(e) => handleChange('package', e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-[#171822] border border-[#27293a] text-white text-sm focus:outline-none focus:border-[#E50914] transition-colors"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#171822] border border-[#27293a] text-white text-xs focus:outline-none focus:border-[#E50914] transition-colors"
                   >
-                    <option value="">Custom / Undecided</option>
-                    {packages.map((p) => (
-                      <option key={p.id || p._id} value={p.packageName}>
-                        {p.packageName} ({p.price})
+                    <option value="">Custom Package / Undecided</option>
+                    {availablePackages.map((p) => (
+                      <option key={p.id || p._id || p.packageName} value={p.packageName}>
+                        {p.packageName} ({p.price}{p.discount ? ` - ${p.discount}` : ''})
                       </option>
                     ))}
                   </select>
